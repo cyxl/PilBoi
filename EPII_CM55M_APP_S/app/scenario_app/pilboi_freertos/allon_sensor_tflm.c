@@ -142,7 +142,7 @@ void pinmux_init()
  */
 int app_main(void)
 {
-	//pinmux_init();
+	pinmux_init();
 
 	dbg_printf(DBG_LESS_INFO, "freertos rtos_app\r\n");
 
@@ -205,14 +205,14 @@ int app_main(void)
 			;
 	}
 
-
 	if (xTaskCreate(main_task, "Main_task", 512, NULL, main_task_PRIORITY, NULL) !=
 		pdPASS)
 	{
 		dbg_printf(DBG_LESS_INFO, "main_task creation failed!.\r\n");
 		while (1)
 			;
-	}else
+	}
+	else
 	{
 
 		dbg_printf(DBG_LESS_INFO, "main_task created!.\r\n");
@@ -226,24 +226,23 @@ int app_main(void)
 			;
 	}
 
-/*
-	if (xTaskCreate(motor_task, "Motor_task", 512, NULL, motor_task_PRIORITY, NULL) !=
-		pdPASS)
-	{
-		dbg_printf(DBG_LESS_INFO, "motor_task creation failed!.\r\n");
-		while (1)
-			;
-	}
-*/
-
+	/*
+		if (xTaskCreate(motor_task, "Motor_task", 512, NULL, motor_task_PRIORITY, NULL) !=
+			pdPASS)
+		{
+			dbg_printf(DBG_LESS_INFO, "motor_task creation failed!.\r\n");
+			while (1)
+				;
+		}
+	*/
 
 	dbg_printf(DBG_LESS_INFO, "start scheduler\r\n");
 
 	vTaskStartScheduler();
 
-
-	for (;;) dbg_printf(DBG_LESS_INFO, "spinning\r\n");
-		;
+	for (;;)
+		dbg_printf(DBG_LESS_INFO, "spinning\r\n");
+	;
 
 	return 0;
 }

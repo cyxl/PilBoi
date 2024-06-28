@@ -15,7 +15,7 @@ APPL_DEFINES += -DDBG_MORE
 # Add new library here
 # The source code should be loacted in ~\library\{lib_name}\
 ##
-LIB_SEL = pwrmgmt sensordp tflmtag2209_u55tag2205 spi_ptl spi_eeprom 
+LIB_SEL = pwrmgmt sensordp tflmtag2209_u55tag2205 spi_ptl spi_eeprom i2c_comm
 #LIB_SEL = pwrmgmt sensordp tflmtag2209_u55tag2205 spi_ptl spi_eeprom hxevent
 
 ##
@@ -23,9 +23,7 @@ LIB_SEL = pwrmgmt sensordp tflmtag2209_u55tag2205 spi_ptl spi_eeprom
 # Add new middleware here
 # The source code should be loacted in ~\middleware\{mid_name}\
 ##
-MID_SEL = fatfs
-FATFS_PORT_LIST = flash
-CMSIS_DRIVERS_LIST = Flash
+MID_SEL =
 
 #override OS_SEL := freertos
 override OS_SEL := freertos_10_5_1
