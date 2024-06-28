@@ -226,15 +226,13 @@ int app_main(void)
 			;
 	}
 
-	/*
-		if (xTaskCreate(motor_task, "Motor_task", 512, NULL, motor_task_PRIORITY, NULL) !=
-			pdPASS)
-		{
-			dbg_printf(DBG_LESS_INFO, "motor_task creation failed!.\r\n");
-			while (1)
-				;
-		}
-	*/
+	if (xTaskCreate(motor_task, "Motor_task", 512, NULL, motor_task_PRIORITY, NULL) !=
+		pdPASS)
+	{
+		dbg_printf(DBG_LESS_INFO, "motor_task creation failed!.\r\n");
+		while (1)
+			;
+	}
 
 	dbg_printf(DBG_LESS_INFO, "start scheduler\r\n");
 
@@ -324,12 +322,12 @@ void main_task(void *pvParameters)
 					dbg_printf(DBG_LESS_INFO, "send motor_send_msg=0x%x fail\r\n", algo_send_msg.msg_event);
 				}
 
-				imgcap_send_msg.msg_data = 0;
-				imgcap_send_msg.msg_event = APP_MSG_IMGCAP_CAPTURE;
-				if (xQueueSend(xImgCapTaskQueue, (void *)&imgcap_send_msg, __QueueSendTicksToWait) != pdTRUE)
-				{
-					dbg_printf(DBG_LESS_INFO, "send imgcap_send_msg=0x%x fail\r\n", algo_send_msg.msg_event);
-				}
+				// imgcap_send_msg.msg_data = 0;
+				// imgcap_send_msg.msg_event = APP_MSG_IMGCAP_CAPTURE;
+				// if (xQueueSend(xImgCapTaskQueue, (void *)&imgcap_send_msg, __QueueSendTicksToWait) != pdTRUE)
+				// {
+				// 	dbg_printf(DBG_LESS_INFO, "send imgcap_send_msg=0x%x fail\r\n", algo_send_msg.msg_event);
+				// }
 				// END MOVE
 				break;
 			case APP_MSG_MAINEVENT_SENSOR_TIMER:
