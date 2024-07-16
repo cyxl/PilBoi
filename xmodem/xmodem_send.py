@@ -114,7 +114,7 @@ def xmodem_send_bin():
         print(str(response))
         send_at_command('1')
 
-        if (str(response).count('Send data using the xmodem protocol from your terminal') > 0) :
+        if 'Send data using the xmodem protocol from your terminal'.encode() in response:
             break
 
     time.sleep(1)
@@ -158,7 +158,8 @@ def xmodem_send_bin():
 
         while(_wait_reboot_system):
             response = ser.readline().strip()        
-            if (str(response).count('Do you want to end file transmission and reboot system? (y)') > 0) :
+            print ('received0',response)
+            if 'Do you want to end file transmission and reboot system? (y)'.encode() in response:
                 break
 
         time.sleep(1)
@@ -197,7 +198,8 @@ def xmodem_send_bin():
 
         while(True):
             response = ser.readline().strip()        
-            if (str(response).count('Do you want to end file transmission and reboot system? (y)') > 0) :
+            print ('received',response)
+            if 'Do you want to end file transmission and reboot system'.encode() in response:
                 break
 
         time.sleep(1)

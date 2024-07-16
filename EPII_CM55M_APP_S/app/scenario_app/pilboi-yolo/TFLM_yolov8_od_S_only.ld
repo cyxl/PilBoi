@@ -4,10 +4,9 @@ MEMORY
   /* Define each memory region */
   CM55M_S_APP_ROM (rx) : ORIGIN = 0x10000000, LENGTH = 0x40000 /* 256K bytes  */  
   CM55M_S_APP_DATA (rwx) : ORIGIN = 0x30000000, LENGTH = 0x40000 /* 256K bytes*/ 
-  CM55M_S_SRAM0 (rwx) : ORIGIN = 0x3404D000, LENGTH = 0xB3000 /* 1M-0x4D000 bytes*/
+  //CM55M_S_SRAM0 (rwx) : ORIGIN = 0x3404D000, LENGTH = 0xB3000 /* 1M-0x4D000 bytes*/
   //CM55M_S_SRAM1 (rwx) : ORIGIN = 0x340E0000, LENGTH = 0x120000 /* 1M bytes*/
   CM55M_S_SRAM (rwx) : ORIGIN = BOOT2NDLOADER_BASE, LENGTH = 0x00200000-(BOOT2NDLOADER_BASE-BASE_ADDR_SRAM0_ALIAS) /* 2M-0x1f000 bytes*/
-  PILBOI_DATA (rx) : ORIGIN = 0x3AB7B000, LENGTH = 0x200000 /* 2 mbytes  */  
 }
 
 __HEAP_SIZE = 0x20000;
@@ -229,13 +228,6 @@ SECTIONS
     	PROVIDE(__StackTop = .);     	
   	} > CM55M_S_APP_DATA
 
-
-    /* BWS */
-    .PILBOI_weights : ALIGN(4) {
-      *(.PILBOI_weights)
-    } > CM55M_S_APP_DATA
-
-
     
     
   	PROVIDE(__stack = __StackTop);
@@ -249,6 +241,6 @@ SECTIONS
      * complex images (e.g multiple Flash banks).
      */
     _image_start = LOADADDR(.text);
-    _image_end = LOADADDR(.data) + SIZEOF(.data) + SIZEOF(.PILBOI_weights);
+    _image_end = LOADADDR(.data) + SIZEOF(.data);
     _image_size = _image_end - _image_start;
 }
