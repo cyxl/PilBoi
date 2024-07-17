@@ -52,8 +52,6 @@ uint8_t step_anticlockwise(uint8_t step_idx, int motor_id)
     uint8_t l_step_idx = (step_idx + 1) % STEP_SEQ_LEN;
     for (int i = 0; i < NUM_MOTOR_PINS; i++)
     {
-        printf("step idx %d i %d pin %d ss %d\n",
-               l_step_idx, i, pins[i], step_sequence[l_step_idx][i]);
         hx_drv_gpio_set_out_value(pins[i], step_sequence[l_step_idx][i]);
     }
     hx_drv_timer_cm55x_delay_us(STEPPER_DELAY, TIMER_STATE_DC);
@@ -102,15 +100,14 @@ int init_motors()
 
 uint8_t step_some(uint8_t step_idx, int motor_id, uint8_t clockwise, int num)
 {
-    uint8_t idx = step_idx;
     for (int i = 0; i < num; i++)
     {
         if (clockwise)
-            idx = step_clockwise(idx, motor_id);
+            step_idx = step_clockwise(step_idx, motor_id);
         else
-            idx = step_anticlockwise(idx, motor_id);
+            step_idx = step_anticlockwise(step_idx, motor_id);
     }
-    return idx;
+    return step_idx;
 }
 
 uint8_t step_some_deg(uint8_t step_idx, int motor_id, uint8_t clockwise, float degrees)
