@@ -6,7 +6,7 @@
 #include "hx_drv_scu_export.h"
 
 #include <stdio.h>
-
+#define DEGS_TO_STEPS (4096. / 360.)
 #define STEPPER_DELAY 2
 
 GPIO_INDEX_E yz_motor_pins[NUM_MOTOR_PINS] = {GPIO13, GPIO14, GPIO15, GPIO0};
@@ -41,7 +41,7 @@ uint8_t step_clockwise(uint8_t step_idx, int motor_id)
     {
         hx_drv_gpio_set_out_value(pins[i], step_sequence[l_step_idx][i]);
     }
-	hx_drv_timer_cm55x_delay_us(STEPPER_DELAY, TIMER_STATE_DC);
+    hx_drv_timer_cm55x_delay_us(STEPPER_DELAY, TIMER_STATE_DC);
     return l_step_idx;
 }
 
@@ -53,17 +53,17 @@ uint8_t step_anticlockwise(uint8_t step_idx, int motor_id)
     for (int i = 0; i < NUM_MOTOR_PINS; i++)
     {
         printf("step idx %d i %d pin %d ss %d\n",
-        l_step_idx,i,pins[i],step_sequence[l_step_idx][i]);
+               l_step_idx, i, pins[i], step_sequence[l_step_idx][i]);
         hx_drv_gpio_set_out_value(pins[i], step_sequence[l_step_idx][i]);
     }
-	hx_drv_timer_cm55x_delay_us(STEPPER_DELAY, TIMER_STATE_DC);
+    hx_drv_timer_cm55x_delay_us(STEPPER_DELAY, TIMER_STATE_DC);
     return l_step_idx;
 }
 
 int init_motors()
 {
     int result;
-    //hx_drv_gpio_init(GPIO_GROUP_0, HX_GPIO_GROUP_0_BASE);
+    // hx_drv_gpio_init(GPIO_GROUP_0, HX_GPIO_GROUP_0_BASE);
 
     // Configure PB2(D9) as GPIO13
     hx_drv_gpio_set_output(GPIO13, GPIO_OUT_LOW);
@@ -111,4 +111,11 @@ uint8_t step_some(uint8_t step_idx, int motor_id, uint8_t clockwise, int num)
             idx = step_anticlockwise(idx, motor_id);
     }
     return idx;
+}
+
+uint8_t step_some_deg(uint8_t step_idx, int motor_id, uint8_t clockwise, float degrees)
+{
+    float degstosteps = degrees * DEGS_TO_STEPS;
+    uint16_t intSteps = (degstosteps);
+    return step_some(step_idx, motor_id, clockwise, intSteps);
 }

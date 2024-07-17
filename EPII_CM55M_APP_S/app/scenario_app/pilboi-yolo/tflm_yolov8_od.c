@@ -701,7 +701,7 @@ static void dp_app_cv_yolov8n_ob_eventhdl_cb(EVT_INDEX_E event)
 
 	if (g_frame_ready == 1)
 	{
-		g_step_idx = step_some(g_step_idx,YZ_MOTOR_ID,false,4096/2);
+		g_step_idx = step_some_deg(g_step_idx, YZ_MOTOR_ID, false, 90.);
 		g_frame_ready = 0;
 
 		hx_drv_swreg_aon_get_appused1(&judge_case_data);
