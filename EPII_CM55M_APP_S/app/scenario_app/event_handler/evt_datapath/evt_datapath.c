@@ -890,6 +890,55 @@ uint8_t evt_Pilboi_BtnUp_cb(void)
 	}
 	return HX_EVENT_RETURN_DONE;
 }
+uint8_t evt_Pilboi_PillNotFov_cb(void)
+{
+	if(g_event_cb != NULL)
+	{
+		g_event_cb(EVT_PILBOI_PILL_NOT_FOV);
+	}else{
+#ifndef __GNU__
+		dbg_printf(DBG_LESS_INFO,"EVT_PILBOI_PILL_NOT_FOV g_event_cb == NULL\n");
+#endif
+	}
+	return HX_EVENT_RETURN_DONE;
+}
+
+uint8_t evt_Pilboi_PillFov_cb(void)
+{
+	if(g_event_cb != NULL)
+	{
+		g_event_cb(EVT_PILBOI_PILL_FOV);
+	}else{
+#ifndef __GNU__
+		dbg_printf(DBG_LESS_INFO,"EVT_PILBOI_PILL_FOV g_event_cb == NULL\n");
+#endif
+	}
+	return HX_EVENT_RETURN_DONE;
+}
+uint8_t evt_Pilboi_PillNotId_cb(void)
+{
+	if(g_event_cb != NULL)
+	{
+		g_event_cb(EVT_PILBOI_PILL_NOT_ID);
+	}else{
+#ifndef __GNU__
+		dbg_printf(DBG_LESS_INFO,"EVT_PILBOI_PILL_NOT_ID g_event_cb == NULL\n");
+#endif
+	}
+	return HX_EVENT_RETURN_DONE;
+}
+uint8_t evt_Pilboi_PillId_cb(void)
+{
+	if(g_event_cb != NULL)
+	{
+		g_event_cb(EVT_PILBOI_PILL_ID);
+	}else{
+#ifndef __GNU__
+		dbg_printf(DBG_LESS_INFO,"EVT_PILBOI_PILL_ID g_event_cb == NULL\n");
+#endif
+	}
+	return HX_EVENT_RETURN_DONE;
+}
 
 #if 0
 /**

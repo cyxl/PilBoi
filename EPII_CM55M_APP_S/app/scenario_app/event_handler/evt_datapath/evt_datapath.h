@@ -182,6 +182,11 @@ uint8_t evt_xDMA_FrameReady_cb(void);
 
 uint8_t evt_Pilboi_BtnDown_cb(void);
 uint8_t evt_Pilboi_BtnUp_cb(void);
+
+uint8_t evt_Pilboi_PillNotFov_cb(void);
+uint8_t evt_Pilboi_PillFov_cb(void);
+uint8_t evt_Pilboi_PillNotId_cb(void);
+uint8_t evt_Pilboi_PillId_cb(void);
 #if 0
 /**
  * \brief	Callback function for PGPIO0 Interrupt

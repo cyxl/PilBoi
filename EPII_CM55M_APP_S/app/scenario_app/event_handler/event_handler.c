@@ -758,6 +758,41 @@ void event_handler_init(void)
         hx_event_set_priority(g_event[EVT_INDEX_PILBOI_BTN_UP], EVT_PRIORITY_HIGHEST);
     }
 
+    hx_event_create(&g_event[EVT_PILBOI_PILL_NOT_FOV]);
+    if(g_event[EVT_PILBOI_PILL_NOT_FOV] == EVT_INDEX_MAX){
+        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_PILBOI_PILL_NOT_FOV\n");
+    }
+    else{
+        hx_event_set_callback(g_event[EVT_PILBOI_PILL_NOT_FOV], evt_Pilboi_PillNotFov_cb);
+        hx_event_set_priority(g_event[EVT_PILBOI_PILL_NOT_FOV], EVT_PRIORITY_HIGHEST);
+    }
+
+    hx_event_create(&g_event[EVT_PILBOI_PILL_FOV]);
+    if(g_event[EVT_PILBOI_PILL_FOV] == EVT_INDEX_MAX){
+        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_PILBOI_PILL_FOV\n");
+    }
+    else{
+        hx_event_set_callback(g_event[EVT_PILBOI_PILL_FOV], evt_Pilboi_PillFov_cb);
+        hx_event_set_priority(g_event[EVT_PILBOI_PILL_FOV], EVT_PRIORITY_HIGHEST);
+    }
+    
+    hx_event_create(&g_event[EVT_PILBOI_PILL_NOT_ID]);
+    if(g_event[EVT_PILBOI_PILL_NOT_ID] == EVT_INDEX_MAX){
+        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_PILBOI_PILL_NOT_ID\n");
+    }
+    else{
+        hx_event_set_callback(g_event[EVT_PILBOI_PILL_NOT_ID], evt_Pilboi_PillNotId_cb);
+        hx_event_set_priority(g_event[EVT_PILBOI_PILL_NOT_ID], EVT_PRIORITY_HIGHEST);
+    }
+
+    hx_event_create(&g_event[EVT_PILBOI_PILL_ID]);
+    if(g_event[EVT_PILBOI_PILL_ID] == EVT_INDEX_MAX){
+        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_PILBOI_PILL_ID\n");
+    }
+    else{
+        hx_event_set_callback(g_event[EVT_PILBOI_PILL_ID], evt_Pilboi_PillId_cb);
+        hx_event_set_priority(g_event[EVT_PILBOI_PILL_ID], EVT_PRIORITY_HIGHEST);
+    }
     /*
      * if enable WFI must disable systick
      */
