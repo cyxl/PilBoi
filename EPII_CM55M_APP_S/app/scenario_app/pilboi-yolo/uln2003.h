@@ -52,6 +52,12 @@ extern "C"
     uint8_t step_some(uint8_t step_idx, int motor_id, uint8_t clockwise, int num);
     uint8_t step_some_deg(uint8_t step_idx, int motor_id, uint8_t clockwise, float degrees);
 
+
+    /**
+     * @brief Returns the degrees between (x1,y1) and (x2,y2)
+     */
+    float get_degs(int x1,int y1, int x2, int y2);
+
 #ifdef __cplusplus
 }
 #endif
