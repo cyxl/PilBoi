@@ -86,6 +86,14 @@
 
 #define GROVE_VISION_AI_II
 
+enum PILBOI_STATES
+{
+	INIT = 0,
+	FOV,
+	ID,
+	NUM_STATES
+};
+
 static uint8_t g_xdma_abnormal, g_md_detect, g_cdm_fifoerror, g_wdt1_timeout, g_wdt2_timeout, g_wdt3_timeout;
 static uint8_t g_hxautoi2c_error, g_inp1bitparer_abnormal;
 static uint32_t g_dp_event;
@@ -103,12 +111,58 @@ struct_fl_fr_algoResult algoresult_fl_fr_infer;
 struct_yolov8_ob_algoResult algoresult_yolov8n_ob;
 struct_yolov8_ob_algoResult algoresult_yolofastest_ob;
 struct_yolov8_pose_algoResult algoresult_yolov8_pose;
+uint8_t g_num_res = 0;
+int8_t g_fov_max_box_idx = 0;
+enum PILBOI_STATES g_state = FOV;
 static uint32_t g_trans_type;
 static uint32_t judge_case_data;
 static uint8_t g_step_idx = 0;
 void app_start_state(APP_STATE_E state);
 void model_change(void);
 void pinmux_init();
+
+uint8_t g_consec_pos = 0;
+#define PILBOI_FOV_CONF .8
+#define PILBOI_FOV_NUM 1
+#define PILBOI_CONSEC_POS 3
+
+void move_platform(float degs)
+{
+	g_step_idx = step_some_deg(g_step_idx, YZ_MOTOR_ID, false, degs);
+}
+
+void process_od_results_fov(struct_yolov8_ob_algoResult *algo, uint8_t num)
+{
+	printf("fov num %d\n",num);
+	// Is there a pill in FOV
+	float max_conf = 0;
+	uint8_t max_class_id = 255;
+	g_fov_max_box_idx = -1;
+	for (int i = 0; i < num; i++)
+	{
+				printf("conf %d\n",(int)(algo->obr[i].confidence* 100));
+		if (algo->obr[i].confidence > PILBOI_FOV_CONF)
+		{
+			g_consec_pos++;
+			if (max_conf < algo->obr[i].confidence)
+			{
+				max_conf = algo->obr[i].confidence;
+				max_class_id = algo->obr[i].class_idx;
+				g_fov_max_box_idx = i;
+				printf("Upping max conf %d\n",(int)(max_conf * 100));
+			}
+		}
+	}
+	if (max_conf) g_consec_pos++;
+	else g_consec_pos = 0;
+	if (max_conf > PILBOI_FOV_CONF && g_consec_pos >= PILBOI_CONSEC_POS)
+	{
+		printf("FOV!! %d\n", max_conf * 100.);
+		evt_Pilboi_PillFov_cb();
+	}
+	else
+		evt_Pilboi_PillNotFov_cb();
+}
 
 #ifdef GROVE_VISION_AI_II
 /* Init SPI master pin mux (share with SDIO) */
@@ -633,6 +687,7 @@ static void dp_app_cv_yolov8n_ob_eventhdl_cb(EVT_INDEX_E event)
 	case EVT_INDEX_1BITPARSER_ERR: /*reg_inpparser_fs_cycle_error*/
 		hx_drv_inp1bitparser_get_errstatus(&err);
 		dbg_printf(DBG_LESS_INFO, "EVT_INDEX_1BITPARSER_ERR err=0x%x\r\n", err);
+
 		hx_drv_inp1bitparser_clear_int();
 		hx_drv_inp1bitparser_set_enable(0);
 		g_inp1bitparer_abnormal = 1;
@@ -694,6 +749,22 @@ static void dp_app_cv_yolov8n_ob_eventhdl_cb(EVT_INDEX_E event)
 		dbg_printf(DBG_LESS_INFO, "EVT_INDEX_HXAUTOI2C_ERR\r\n");
 		g_hxautoi2c_error = 1;
 		break;
+	case EVT_PILBOI_NEXT:
+		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_NEXT\r\n");
+		sensordplib_retrigger_capture();
+		break;
+	case EVT_PILBOI_OD_DONE:
+		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_OD_DONE\r\n");
+		if (g_state == FOV)
+			process_od_results_fov(&algoresult_yolov8n_ob, g_num_res);
+		break;
+	case EVT_PILBOI_PILL_NOT_FOV:
+		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_NOT_FOV\r\n");
+		if (g_state == FOV)
+			move_platform(3.);
+		evt_Pilboi_Next_cb();
+		break;
+
 	default:
 		dbg_printf(DBG_LESS_INFO, "Other Event %d\n", event);
 		break;
@@ -701,7 +772,6 @@ static void dp_app_cv_yolov8n_ob_eventhdl_cb(EVT_INDEX_E event)
 
 	if (g_frame_ready == 1)
 	{
-		g_step_idx = step_some_deg(g_step_idx, YZ_MOTOR_ID, false, 90.);
 		g_frame_ready = 0;
 
 		hx_drv_swreg_aon_get_appused1(&judge_case_data);
@@ -730,7 +800,7 @@ static void dp_app_cv_yolov8n_ob_eventhdl_cb(EVT_INDEX_E event)
 			if (hx_drv_spi_mst_open_speed(SPI_SEN_PIC_CLK) != 0)
 			{
 				dbg_printf(DBG_LESS_INFO, "DEBUG SPI master init fail\r\n");
-				sensordplib_retrigger_capture();
+				// sensordplib_retrigger_capture();
 				return;
 			}
 			g_spi_master_initial_status = 1;
@@ -761,7 +831,7 @@ static void dp_app_cv_yolov8n_ob_eventhdl_cb(EVT_INDEX_E event)
 		g_trans_type = (judge_case_data >> 16);
 		if (g_trans_type == 0) // transfer type is (UART)
 		{
-			cv_yolov8n_ob_run(&algoresult_yolov8n_ob);
+			cv_yolov8n_ob_run(&algoresult_yolov8n_ob, &g_num_res);
 		}
 		else if (g_trans_type == 1 || g_trans_type == 2) // transfer type is (SPI) or (UART & SPI)
 		{
@@ -770,7 +840,7 @@ static void dp_app_cv_yolov8n_ob_eventhdl_cb(EVT_INDEX_E event)
 			uint32_t loop_cnt_1, loop_cnt_2;
 			SystemGetTick(&systick_1, &loop_cnt_1);
 #endif
-			cv_yolov8n_ob_run(&algoresult_yolov8n_ob);
+			cv_yolov8n_ob_run(&algoresult_yolov8n_ob, &g_num_res);
 
 #if TOTAL_STEP_TICK
 			SystemGetTick(&systick_2, &loop_cnt_2);
@@ -795,7 +865,7 @@ static void dp_app_cv_yolov8n_ob_eventhdl_cb(EVT_INDEX_E event)
 		SystemGetTick(&systick_1, &loop_cnt_1);
 #endif
 
-		cv_yolov8n_ob_run(&algoresult_yolov8n_ob);
+		cv_yolov8n_ob_run(&algoresult_yolov8n_ob, g_num_res);
 #if TOTAL_STEP_TICK
 		SystemGetTick(&systick_2, &loop_cnt_2);
 #if TOTAL_STEP_TICK_DBG_LOG
@@ -810,6 +880,7 @@ static void dp_app_cv_yolov8n_ob_eventhdl_cb(EVT_INDEX_E event)
 
 #endif
 		// clear_alg_hp_rsult
+		#if 0
 		for (int i = 0; i < MAX_TRACKED_YOLOV8_ALGO_RES; ++i)
 		{
 			algoresult_yolov8n_ob.obr[i].bbox.x = 0;
@@ -819,10 +890,11 @@ static void dp_app_cv_yolov8n_ob_eventhdl_cb(EVT_INDEX_E event)
 			algoresult_yolov8n_ob.obr[i].confidence = 0;
 			algoresult_yolov8n_ob.obr[i].class_idx = 0;
 		}
+		#endif
 #endif
 		// recapture image
 		// comment here, we will re-trigger at cv run
-		// sensordplib_retrigger_capture();
+		evt_Pilboi_OdDone_cb();
 	}
 
 	if (g_md_detect == 1)

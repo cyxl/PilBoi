@@ -180,6 +180,8 @@ uint8_t evt_hxautoi2c_err_cb(void);
  */
 uint8_t evt_xDMA_FrameReady_cb(void);
 
+uint8_t evt_Pilboi_Next_cb(void);
+uint8_t evt_Pilboi_OdDone_cb(void);
 uint8_t evt_Pilboi_BtnDown_cb(void);
 uint8_t evt_Pilboi_BtnUp_cb(void);
 

@@ -890,6 +890,31 @@ uint8_t evt_Pilboi_BtnUp_cb(void)
 	}
 	return HX_EVENT_RETURN_DONE;
 }
+uint8_t evt_Pilboi_Next_cb(void)
+{
+	if(g_event_cb != NULL)
+	{
+		g_event_cb(EVT_PILBOI_NEXT);
+	}else{
+#ifndef __GNU__
+		dbg_printf(DBG_LESS_INFO,"EVT_PILBOI_NEXT g_event_cb == NULL\n");
+#endif
+	}
+	return HX_EVENT_RETURN_DONE;
+}
+
+uint8_t evt_Pilboi_OdDone_cb(void)
+{
+	if(g_event_cb != NULL)
+	{
+		g_event_cb(EVT_PILBOI_OD_DONE);
+	}else{
+#ifndef __GNU__
+		dbg_printf(DBG_LESS_INFO,"EVT_PILBOI_OD_DONE g_event_cb == NULL\n");
+#endif
+	}
+	return HX_EVENT_RETURN_DONE;
+}
 uint8_t evt_Pilboi_PillNotFov_cb(void)
 {
 	if(g_event_cb != NULL)

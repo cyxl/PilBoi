@@ -751,11 +751,29 @@ void event_handler_init(void)
 
     hx_event_create(&g_event[EVT_INDEX_PILBOI_BTN_UP]);
     if(g_event[EVT_INDEX_PILBOI_BTN_UP] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_PILBOI_BTN_DOWN\n");
+        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_PILBOI_BTN_UP\n");
     }
     else{
         hx_event_set_callback(g_event[EVT_INDEX_PILBOI_BTN_UP], evt_Pilboi_BtnUp_cb);
         hx_event_set_priority(g_event[EVT_INDEX_PILBOI_BTN_UP], EVT_PRIORITY_HIGHEST);
+    }
+
+    hx_event_create(&g_event[EVT_PILBOI_NEXT]);
+    if(g_event[EVT_PILBOI_NEXT] == EVT_INDEX_MAX){
+        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_PILBOI_NEXT\n");
+    }
+    else{
+        hx_event_set_callback(g_event[EVT_PILBOI_NEXT], evt_Pilboi_Next_cb);
+        hx_event_set_priority(g_event[EVT_PILBOI_NEXT], EVT_PRIORITY_HIGHEST);
+    }
+
+    hx_event_create(&g_event[EVT_PILBOI_OD_DONE]);
+    if(g_event[EVT_PILBOI_OD_DONE] == EVT_INDEX_MAX){
+        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_PILBOI_OD_DONE\n");
+    }
+    else{
+        hx_event_set_callback(g_event[EVT_PILBOI_OD_DONE], evt_Pilboi_OdDone_cb);
+        hx_event_set_priority(g_event[EVT_PILBOI_OD_DONE], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_PILBOI_PILL_NOT_FOV]);

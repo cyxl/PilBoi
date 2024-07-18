@@ -229,7 +229,7 @@ int cv_yolov8n_ob_init(bool security_enable, bool privilege_enable, uint32_t mod
 #define INDEX_T 5
 #define EL_CLIP(x, a, b)           ((x) < (a) ? (a) : ((x) > (b) ? (b) : (x)))
 
-static void yolov8_ob_post_processing(tflite::MicroInterpreter *static_interpreter, float modelScoreThreshold, float modelNMSThreshold, struct_yolov8_ob_algoResult *alg)
+static void yolov8_ob_post_processing(tflite::MicroInterpreter *static_interpreter, float modelScoreThreshold, float modelNMSThreshold, struct_yolov8_ob_algoResult *alg,uint8_t* num)
 {
 	uint32_t img_w = app_get_raw_width();
 	uint32_t img_h = app_get_raw_height();
@@ -312,13 +312,27 @@ static void yolov8_ob_post_processing(tflite::MicroInterpreter *static_interpret
 				  { return a.x < b.x; });
 
 
+	*num = 0;
+	int lnum=0;
 	for (auto& r : _results){
+		if (lnum >= MAX_TRACKED_YOLOV8_ALGO_RES) {break;}
 		printf("Target [%d] Box [%d,%d,%d,%d]\n",r.target,r.x,r.y,r.w,r.h);
 		printfloat(r.score);
+		alg->obr[lnum].bbox.x = r.x;
+		alg->obr[lnum].bbox.y = r.y;
+		alg->obr[lnum].bbox.width = r.w;
+		alg->obr[lnum].bbox.height = r.h;
+		alg->obr[lnum].class_idx = r.target;
+		alg->obr[lnum].confidence = r.score/100.;
+		printfloat(alg->obr[lnum].confidence);
+		lnum++;
 	}
+	*num = lnum;
+	printf ("num is %d \n",*num);
+
 }
 
-int cv_yolov8n_ob_run(struct_yolov8_ob_algoResult *algoresult_yolov8n_ob)
+int cv_yolov8n_ob_run(struct_yolov8_ob_algoResult *algoresult_yolov8n_ob,uint8_t* num)
 {
 	int ercode = 0;
 	float w_scale;
@@ -397,7 +411,7 @@ int cv_yolov8n_ob_run(struct_yolov8_ob_algoResult *algoresult_yolov8n_ob)
 		// retrieve output data
 		// bws yolov8_ob_post_processing(yolov8n_ob_int_ptr,0.25, 0.45, algoresult_yolov8n_ob,el_algo);
 		// yolov8_ob_post_processing(yolov8n_ob_int_ptr,0.25, 0.45, algoresult_yolov8n_ob);
-		yolov8_ob_post_processing(yolov8n_ob_int_ptr, .7, .5, algoresult_yolov8n_ob);
+		yolov8_ob_post_processing(yolov8n_ob_int_ptr, .7, .5, algoresult_yolov8n_ob,num);
 #ifdef EACH_STEP_TICK
 		SystemGetTick(&systick_2, &loop_cnt_2);
 		dbg_printf(DBG_LESS_INFO, "Tick for Invoke for YOLOV8_OB_post_processing:[%d]\r\n\n", (loop_cnt_2 - loop_cnt_1) * CPU_CLK + (systick_1 - systick_2));
@@ -435,8 +449,6 @@ int cv_yolov8n_ob_run(struct_yolov8_ob_algoResult *algoresult_yolov8n_ob)
 #endif
 
 	SystemGetTick(&systick_1, &loop_cnt_1);
-	// recapture image
-	sensordplib_retrigger_capture();
 
 	SystemGetTick(&systick_2, &loop_cnt_2);
 	capture_image_tick = (loop_cnt_2 - loop_cnt_1) * CPU_CLK + (systick_1 - systick_2);

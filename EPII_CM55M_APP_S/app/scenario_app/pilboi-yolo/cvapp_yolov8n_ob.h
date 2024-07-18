@@ -16,7 +16,7 @@ extern "C" {
 
 int cv_yolov8n_ob_init(bool security_enable, bool privilege_enable, uint32_t model_addr);
 
-int cv_yolov8n_ob_run(struct_yolov8_ob_algoResult *algoresult_yolov8n_ob);
+int cv_yolov8n_ob_run(struct_yolov8_ob_algoResult *algoresult_yolov8n_ob,uint8_t* num);
 
 int cv_yolov8n_ob_deinit();
 #ifdef __cplusplus
