@@ -122,25 +122,30 @@ void model_change(void);
 void pinmux_init();
 
 uint8_t g_consec_pos = 0;
-#define PILBOI_FOV_CONF .8
+#define PILBOI_FOV_CONF .9
 #define PILBOI_FOV_NUM 1
-#define PILBOI_CONSEC_POS 3
+#define PILBOI_CONSEC_POS 5
+
+void print_bb(x,y,w,h) {
+	xprintf("(%d,%d)(%d,%d)\n", (int)x, (int)y, (int)x+w, (int)y+h);
+}
 
 void move_platform(float degs)
 {
 	g_step_idx = step_some_deg(g_step_idx, YZ_MOTOR_ID, false, degs);
 }
 
+
 void process_od_results_fov(struct_yolov8_ob_algoResult *algo, uint8_t num)
 {
-	printf("fov num %d\n",num);
+	printf("fov num %d\n", num);
 	// Is there a pill in FOV
 	float max_conf = 0;
 	uint8_t max_class_id = 255;
 	g_fov_max_box_idx = -1;
 	for (int i = 0; i < num; i++)
 	{
-				printf("conf %d\n",(int)(algo->obr[i].confidence* 100));
+		printf("conf %d\n", (int)(algo->obr[i].confidence * 100));
 		if (algo->obr[i].confidence > PILBOI_FOV_CONF)
 		{
 			g_consec_pos++;
@@ -149,12 +154,20 @@ void process_od_results_fov(struct_yolov8_ob_algoResult *algo, uint8_t num)
 				max_conf = algo->obr[i].confidence;
 				max_class_id = algo->obr[i].class_idx;
 				g_fov_max_box_idx = i;
-				printf("Upping max conf %d\n",(int)(max_conf * 100));
+				printf("Upping max conf %d class %d\n", (int)(max_conf * 100), max_class_id);
+				print_bb(
+					algo->obr[i].bbox.x,
+					algo->obr[i].bbox.y,
+					algo->obr[i].bbox.width,
+					algo->obr[i].bbox.height
+					);
 			}
 		}
 	}
-	if (max_conf) g_consec_pos++;
-	else g_consec_pos = 0;
+	if (max_conf)
+		g_consec_pos++;
+	else
+		g_consec_pos = 0;
 	if (max_conf > PILBOI_FOV_CONF && g_consec_pos >= PILBOI_CONSEC_POS)
 	{
 		printf("FOV!! %d\n", max_conf * 100.);
@@ -879,8 +892,8 @@ static void dp_app_cv_yolov8n_ob_eventhdl_cb(EVT_INDEX_E event)
 #endif
 
 #endif
-		// clear_alg_hp_rsult
-		#if 0
+// clear_alg_hp_rsult
+#if 0
 		for (int i = 0; i < MAX_TRACKED_YOLOV8_ALGO_RES; ++i)
 		{
 			algoresult_yolov8n_ob.obr[i].bbox.x = 0;
@@ -890,7 +903,7 @@ static void dp_app_cv_yolov8n_ob_eventhdl_cb(EVT_INDEX_E event)
 			algoresult_yolov8n_ob.obr[i].confidence = 0;
 			algoresult_yolov8n_ob.obr[i].class_idx = 0;
 		}
-		#endif
+#endif
 #endif
 		// recapture image
 		// comment here, we will re-trigger at cv run
