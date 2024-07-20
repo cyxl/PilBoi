@@ -4,15 +4,22 @@
 #include "hx_drv_timer.h"
 #include "WE2_device_addr.h"
 #include "hx_drv_scu_export.h"
+#include "pilboi_utils.h"
 
 #include <math.h>
 #include <stdio.h>
 #define DEGS_TO_STEPS (4096. / 360.)
 #define STEPPER_DELAY 400
 #define PIVOTORIGINX 128
-#define PIVOTORIGINY -256
+#define PIVOTORIGINY 64
 #define CAMCENTERX 128
 #define CAMCENTERY 128
+
+float rads_to_degs(float X)
+{
+
+    return X * 180. / 3.1415926;
+}
 
 GPIO_INDEX_E yz_motor_pins[NUM_MOTOR_PINS] = {GPIO13, GPIO14, GPIO15, GPIO0};
 GPIO_INDEX_E xy_motor_pins[NUM_MOTOR_PINS] = {GPIO1, GPIO2, SB_GPIO0, SB_GPIO1};
@@ -130,9 +137,17 @@ float distanceformula(int x1, int y1, int x2, int y2)
 
 float calc_deg(uint8_t pillX, uint8_t pillY)
 {
-    float pilltoorigin = distanceformula(pillX, PIVOTORIGINX, pillY, PIVOTORIGINY);
-    float pilltocenter = distanceformula(pillX, CAMCENTERX, pillY, CAMCENTERY);
+    float pilltoorigin = distanceformula(pillX, pillY, PIVOTORIGINX, PIVOTORIGINY);
+    float pilltocenter = distanceformula(pillX, pillY, CAMCENTERX, CAMCENTERY);
     float origintocenter = distanceformula(PIVOTORIGINX, CAMCENTERX, PIVOTORIGINY, CAMCENTERY);
-    float origindeg = acos(pow(origintocenter, 2) + pow(pilltocenter, 2) - pow(pilltoorigin, 2) / 2 * origintocenter * pilltocenter);
+    float origindeg = acos((pow(pilltocenter, 2) - pow(origintocenter, 2) + pow(pilltoorigin, 2)) / (-2 * origintocenter * pilltoorigin));
+    // float origindeg = acos(pow(origintocenter, 2) + pow(pilltocenter, 2) - pow(pilltoorigin, 2) / 2 * origintocenter * pilltocenter);
+    origindeg = rads_to_degs(origindeg);
+    xprintf("dist %d %d %d\n", pilltoorigin, pilltocenter, origintocenter);
+    printfloat(pilltoorigin);
+    printfloat(pilltocenter);
+    printfloat(origintocenter);
+    printfloat(origindeg);
+
     return origindeg;
 }

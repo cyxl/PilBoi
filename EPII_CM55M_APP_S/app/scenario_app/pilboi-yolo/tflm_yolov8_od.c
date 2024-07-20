@@ -90,15 +90,17 @@ enum PILBOI_STATES
 {
 	INIT = 0,
 	FOV,
-	ID,
+	CENTERING,
+	IDING,
 	NUM_STATES
 };
-typedef struct
+struct pilboi_centroid
 {
 	uint16_t x;
 	uint16_t y;
-} g_centroid;
+};
 
+static struct pilboi_centroid g_centroid;
 static uint8_t g_xdma_abnormal,
 	g_md_detect, g_cdm_fifoerror, g_wdt1_timeout, g_wdt2_timeout, g_wdt3_timeout;
 static uint8_t g_hxautoi2c_error, g_inp1bitparer_abnormal;
@@ -141,9 +143,11 @@ void move_platform(float degs)
 {
 	g_step_idx = step_some_deg(g_step_idx, YZ_MOTOR_ID, false, degs);
 }
+
 void process_pill_center()
 {
 	float degs = calc_deg(g_centroid.x, g_centroid.y);
+	xprintf("Center Degs %d \n",degs * 100);
 	step_some_deg(g_step_idx, YZ_MOTOR_ID, true, degs);
 }
 
@@ -794,9 +798,8 @@ static void dp_app_cv_yolov8n_ob_eventhdl_cb(EVT_INDEX_E event)
 		break;
 	case EVT_PILBOI_PILL_FOV:
 		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_PILL_FOV\r\n");
-		if (g_state == FOV)
-			move_platform(3.);
-		evt_Pilboi_Next_cb();
+		g_state = CENTERING; 
+		process_pill_center();
 		break;
 
 	default:
