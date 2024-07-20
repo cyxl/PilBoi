@@ -93,8 +93,14 @@ enum PILBOI_STATES
 	ID,
 	NUM_STATES
 };
+typedef struct
+{
+	uint16_t x;
+	uint16_t y;
+} g_centroid;
 
-static uint8_t g_xdma_abnormal, g_md_detect, g_cdm_fifoerror, g_wdt1_timeout, g_wdt2_timeout, g_wdt3_timeout;
+static uint8_t g_xdma_abnormal,
+	g_md_detect, g_cdm_fifoerror, g_wdt1_timeout, g_wdt2_timeout, g_wdt3_timeout;
 static uint8_t g_hxautoi2c_error, g_inp1bitparer_abnormal;
 static uint32_t g_dp_event;
 static uint8_t g_frame_ready;
@@ -126,15 +132,20 @@ uint8_t g_consec_pos = 0;
 #define PILBOI_FOV_NUM 1
 #define PILBOI_CONSEC_POS 5
 
-void print_bb(x,y,w,h) {
-	xprintf("(%d,%d)(%d,%d)\n", (int)x, (int)y, (int)x+w, (int)y+h);
+void print_bb(x, y, w, h)
+{
+	xprintf("(%d,%d)(%d,%d)\n", (int)x, (int)y, (int)x + w, (int)y + h);
 }
 
 void move_platform(float degs)
 {
 	g_step_idx = step_some_deg(g_step_idx, YZ_MOTOR_ID, false, degs);
 }
-
+void process_pill_center()
+{
+	float degs = calc_deg(g_centroid.x, g_centroid.y);
+	step_some_deg(g_step_idx, YZ_MOTOR_ID, true, degs);
+}
 
 void process_od_results_fov(struct_yolov8_ob_algoResult *algo, uint8_t num)
 {
@@ -142,6 +153,7 @@ void process_od_results_fov(struct_yolov8_ob_algoResult *algo, uint8_t num)
 	// Is there a pill in FOV
 	float max_conf = 0;
 	uint8_t max_class_id = 255;
+	uint8_t max_idx = 0;
 	g_fov_max_box_idx = -1;
 	for (int i = 0; i < num; i++)
 	{
@@ -151,6 +163,7 @@ void process_od_results_fov(struct_yolov8_ob_algoResult *algo, uint8_t num)
 			g_consec_pos++;
 			if (max_conf < algo->obr[i].confidence)
 			{
+				max_idx = i;
 				max_conf = algo->obr[i].confidence;
 				max_class_id = algo->obr[i].class_idx;
 				g_fov_max_box_idx = i;
@@ -159,8 +172,7 @@ void process_od_results_fov(struct_yolov8_ob_algoResult *algo, uint8_t num)
 					algo->obr[i].bbox.x,
 					algo->obr[i].bbox.y,
 					algo->obr[i].bbox.width,
-					algo->obr[i].bbox.height
-					);
+					algo->obr[i].bbox.height);
 			}
 		}
 	}
@@ -171,6 +183,9 @@ void process_od_results_fov(struct_yolov8_ob_algoResult *algo, uint8_t num)
 	if (max_conf > PILBOI_FOV_CONF && g_consec_pos >= PILBOI_CONSEC_POS)
 	{
 		printf("FOV!! %d\n", max_conf * 100.);
+		g_centroid.x = algo->obr[max_idx].bbox.x + (algo->obr[max_idx].bbox.width / 2);
+		g_centroid.y = algo->obr[max_idx].bbox.y + (algo->obr[max_idx].bbox.height / 2);
+
 		evt_Pilboi_PillFov_cb();
 	}
 	else
@@ -773,6 +788,12 @@ static void dp_app_cv_yolov8n_ob_eventhdl_cb(EVT_INDEX_E event)
 		break;
 	case EVT_PILBOI_PILL_NOT_FOV:
 		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_NOT_FOV\r\n");
+		if (g_state == FOV)
+			move_platform(3.);
+		evt_Pilboi_Next_cb();
+		break;
+	case EVT_PILBOI_PILL_FOV:
+		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_PILL_FOV\r\n");
 		if (g_state == FOV)
 			move_platform(3.);
 		evt_Pilboi_Next_cb();

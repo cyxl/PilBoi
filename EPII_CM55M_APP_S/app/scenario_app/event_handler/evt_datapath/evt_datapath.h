@@ -8,10 +8,9 @@
 #ifndef SCENARIO_APP_EVENT_HANDLER_EVT_DATAPATH_EVT_DATAPATH_H_
 #define SCENARIO_APP_EVENT_HANDLER_EVT_DATAPATH_EVT_DATAPATH_H_
 
-//#include "hx_drv_adcc.h"
+// #include "hx_drv_adcc.h"
 #include "sensor_dp_lib.h"
 #include "event_handler_evt.h"
-
 
 /**
  * \brief Sensor DP library callback function type definition
@@ -19,7 +18,7 @@
  * \param[in] event dp library callback event
  * \retval void.
  */
-typedef void (*evthandlerdp_CBEvent_t) (EVT_INDEX_E event);
+typedef void (*evthandlerdp_CBEvent_t)(EVT_INDEX_E event);
 #if 0
 /**
  * \brief GPIO Callback
@@ -59,9 +58,9 @@ typedef void (*evthdlADCRTC_CBEvent_t) (uint32_t event);
 // *
 // * clear datapath related event
 // */
-//void evt_dp_clear_all_dpevent();
+// void evt_dp_clear_all_dpevent();
 //
-//void evt_dp_clear_sensor_rtc();
+// void evt_dp_clear_sensor_rtc();
 
 /**
  * \brief	Callback function for 1Bit INP Parser Error
@@ -189,6 +188,7 @@ uint8_t evt_Pilboi_PillNotFov_cb(void);
 uint8_t evt_Pilboi_PillFov_cb(void);
 uint8_t evt_Pilboi_PillNotId_cb(void);
 uint8_t evt_Pilboi_PillId_cb(void);
+uint8_t evt_Pilboi_PillCenter_cb(void);
 #if 0
 /**
  * \brief	Callback function for PGPIO0 Interrupt
@@ -423,7 +423,7 @@ uint8_t evt_ADCRTC_cb(void);
  * @param type register library callback function type (Sensor DP, HOG, RS, JPEG_DEC)
  * @return void.
  * */
-void hx_dplib_evthandler_register_cb(evthandlerdp_CBEvent_t  cb_event, SENSORDPLIB_CB_FUNTYPE_E cb_type);
+void hx_dplib_evthandler_register_cb(evthandlerdp_CBEvent_t cb_event, SENSORDPLIB_CB_FUNTYPE_E cb_type);
 
 SENSORDPLIB_STATUS_E hx_dplib_evthandler_get_dplib_event();
 #if 0

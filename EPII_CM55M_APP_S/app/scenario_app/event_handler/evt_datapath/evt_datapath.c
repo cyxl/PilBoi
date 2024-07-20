@@ -16,13 +16,13 @@
 /****************************************************
  * Variable Declaration                             *
  ***************************************************/
-#define DBG_DP_EVENT_MSG    DBG_LESS_INFO
+#define DBG_DP_EVENT_MSG DBG_LESS_INFO
 
-extern hx_event_t 	g_event[];
+extern hx_event_t g_event[];
 
 static volatile SENSORDPLIB_STATUS_E g_dplib_event;
 
-static volatile evthandlerdp_CBEvent_t  g_event_cb = NULL;
+static volatile evthandlerdp_CBEvent_t g_event_cb = NULL;
 
 #if 0
 static ADCC_CFG_T g_evt_adcc_cfg;
@@ -405,22 +405,22 @@ static void iomux_sgpio1_cb(void* param)
 static void event_dplib_cb(SENSORDPLIB_STATUS_E event)
 {
 	g_dplib_event = event;
-	//dbg_printf(DBG_LESS_INFO,"event_dplib_cb %d\n", event);
+	// dbg_printf(DBG_LESS_INFO,"event_dplib_cb %d\n", event);
 
 	uint16_t err;
-	switch(event)
+	switch (event)
 	{
 	case SENSORDPLIB_STATUS_ERR_FS_HVSIZE:
 	case SENSORDPLIB_STATUS_ERR_FE_TOGGLE:
 	case SENSORDPLIB_STATUS_ERR_FD_TOGGLE:
 	case SENSORDPLIB_STATUS_ERR_FS_TOGGLE:
-	case SENSORDPLIB_STATUS_ERR_BLANK_ERR:/*reg_inpparser_stall_error*/
-	case SENSORDPLIB_STATUS_ERR_CRC_ERR:  /*reg_inpparser_crc_error*/
-	case SENSORDPLIB_STATUS_ERR_FE_ERR:  /*reg_inpparser_fe_cycle_error*/
-	case SENSORDPLIB_STATUS_ERR_HSIZE_ERR:  /*reg_inpparser_hsize_error*/
-	case SENSORDPLIB_STATUS_ERR_FS_ERR:  /*reg_inpparser_fs_cycle_error*/
+	case SENSORDPLIB_STATUS_ERR_BLANK_ERR: /*reg_inpparser_stall_error*/
+	case SENSORDPLIB_STATUS_ERR_CRC_ERR:   /*reg_inpparser_crc_error*/
+	case SENSORDPLIB_STATUS_ERR_FE_ERR:	   /*reg_inpparser_fe_cycle_error*/
+	case SENSORDPLIB_STATUS_ERR_HSIZE_ERR: /*reg_inpparser_hsize_error*/
+	case SENSORDPLIB_STATUS_ERR_FS_ERR:	   /*reg_inpparser_fs_cycle_error*/
 		hx_drv_inp1bitparser_get_errstatus(&err);
-		dbg_printf(DBG_LESS_INFO, "EVT_INDEX_1BITPARSER_ERR err=0x%x\r\n",err);
+		dbg_printf(DBG_LESS_INFO, "EVT_INDEX_1BITPARSER_ERR err=0x%x\r\n", err);
 
 		{
 			SENSORDPLIB_HM11B1_HEADER_T info;
@@ -449,20 +449,20 @@ static void event_dplib_cb(SENSORDPLIB_STATUS_E event)
 			hx_drv_inp1bitparser_get_cycle(&info.fs_cycle, &info.fe_cycle);
 			hx_drv_inp1bitparser_get_fscycle_err_cnt(&info.fs_cycle_err_cnt);
 			hx_drv_inp1bitparser_get_errstatus(&info.err_status);
-			dbg_printf(DBG_LESS_INFO, "fsm=%d\n",info.fsm);
-			dbg_printf(DBG_LESS_INFO, "hw_hsize=%d,hw_vsize=%d\n",info.hw_hsize, info.hw_vsize);
-			dbg_printf(DBG_LESS_INFO, "sensor_hsize=%d,sensor_vsize=%d\n",info.sensor_hsize, info.sensor_vsize);
-			dbg_printf(DBG_LESS_INFO, "frame_len=0x%x,line_len=0x%x\n",info.frame_len, info.line_len);
-			dbg_printf(DBG_LESS_INFO, "again=0x%x\n",info.again);
-			dbg_printf(DBG_LESS_INFO, "dgain=0x%x\n",info.dgain);
-			dbg_printf(DBG_LESS_INFO, "intg=0x%x\n",info.intg);
-			dbg_printf(DBG_LESS_INFO, "intsrc=0x%x\n",info.intsrc);
-			dbg_printf(DBG_LESS_INFO, "fstus=0x%x\n",info.fstus);
-			dbg_printf(DBG_LESS_INFO, "fc=0x%x\n",info.fc);
-			dbg_printf(DBG_LESS_INFO, "sensor_crc=0x%x,hw_crc=0x%x\n",info.sensor_crc,info.hw_crc);
-			dbg_printf(DBG_LESS_INFO, "fs_cycle=%d,fe_cycle=%d\n",info.fs_cycle, info.fe_cycle);
-			dbg_printf(DBG_LESS_INFO, "fs_cycle_err_cnt=%d\n",info.fs_cycle_err_cnt);
-			dbg_printf(DBG_LESS_INFO, "err_status=%d\n",info.err_status);
+			dbg_printf(DBG_LESS_INFO, "fsm=%d\n", info.fsm);
+			dbg_printf(DBG_LESS_INFO, "hw_hsize=%d,hw_vsize=%d\n", info.hw_hsize, info.hw_vsize);
+			dbg_printf(DBG_LESS_INFO, "sensor_hsize=%d,sensor_vsize=%d\n", info.sensor_hsize, info.sensor_vsize);
+			dbg_printf(DBG_LESS_INFO, "frame_len=0x%x,line_len=0x%x\n", info.frame_len, info.line_len);
+			dbg_printf(DBG_LESS_INFO, "again=0x%x\n", info.again);
+			dbg_printf(DBG_LESS_INFO, "dgain=0x%x\n", info.dgain);
+			dbg_printf(DBG_LESS_INFO, "intg=0x%x\n", info.intg);
+			dbg_printf(DBG_LESS_INFO, "intsrc=0x%x\n", info.intsrc);
+			dbg_printf(DBG_LESS_INFO, "fstus=0x%x\n", info.fstus);
+			dbg_printf(DBG_LESS_INFO, "fc=0x%x\n", info.fc);
+			dbg_printf(DBG_LESS_INFO, "sensor_crc=0x%x,hw_crc=0x%x\n", info.sensor_crc, info.hw_crc);
+			dbg_printf(DBG_LESS_INFO, "fs_cycle=%d,fe_cycle=%d\n", info.fs_cycle, info.fe_cycle);
+			dbg_printf(DBG_LESS_INFO, "fs_cycle_err_cnt=%d\n", info.fs_cycle_err_cnt);
+			dbg_printf(DBG_LESS_INFO, "err_status=%d\n", info.err_status);
 
 			uint32_t de0_count, conv_count;
 			SENSORCTRL_STATE_E sc_state;
@@ -478,14 +478,14 @@ static void event_dplib_cb(SENSORDPLIB_STATUS_E event)
 		hx_event_activate_ISR(g_event[EVT_INDEX_1BITPARSER_ERR]);
 		break;
 	case SENSORDPLIB_STATUS_EDM_WDT1_TIMEOUT:
-		//dbg_printf(DBG_DP_EVENT_MSG,"CB WDT1 Timeout\n");
+		// dbg_printf(DBG_DP_EVENT_MSG,"CB WDT1 Timeout\n");
 		hx_event_activate_ISR(g_event[EVT_INDEX_EDM_WDT1_TIMEOUT]);
 		break;
 	case SENSORDPLIB_STATUS_EDM_WDT2_TIMEOUT:
 		hx_event_activate_ISR(g_event[EVT_INDEX_EDM_WDT2_TIMEOUT]);
 		break;
 	case SENSORDPLIB_STATUS_EDM_WDT3_TIMEOUT:
-		//dbg_printf(DBG_DP_EVENT_MSG,"CB WDT3 Timeout\n");
+		// dbg_printf(DBG_DP_EVENT_MSG,"CB WDT3 Timeout\n");
 		hx_event_activate_ISR(g_event[EVT_INDEX_EDM_WDT3_TIMEOUT]);
 		break;
 	case SENSORDPLIB_STATUS_SENSORCTRL_WDT_OUT:
@@ -494,7 +494,7 @@ static void event_dplib_cb(SENSORDPLIB_STATUS_E event)
 		 * 1. SWRESET Datapath
 		 * 2. restart streaming flow
 		 */
-		//dbg_printf(DBG_DP_EVENT_MSG,"WDT OUT %d\n", event);
+		// dbg_printf(DBG_DP_EVENT_MSG,"WDT OUT %d\n", event);
 		break;
 
 	case SENSORDPLIB_STATUS_CDM_FIFO_OVERFLOW:
@@ -504,7 +504,7 @@ static void event_dplib_cb(SENSORDPLIB_STATUS_E event)
 		 * 1. SWRESET Datapath
 		 * 2. restart streaming flow
 		 */
-		//dbg_printf(DBG_DP_EVENT_MSG,"CDM OverFlow/Underflow %d\n", event);
+		// dbg_printf(DBG_DP_EVENT_MSG,"CDM OverFlow/Underflow %d\n", event);
 		hx_event_activate_ISR(g_event[EVT_INDEX_CDM_FIFO_ERR]);
 
 		break;
@@ -547,7 +547,7 @@ static void event_dplib_cb(SENSORDPLIB_STATUS_E event)
 		 * 1. SWRESET Datapath
 		 * 2. restart streaming flow
 		 */
-		//dbg_printf(DBG_DP_EVENT_MSG,"WDMA123 Abnormal %d\n", event);
+		// dbg_printf(DBG_DP_EVENT_MSG,"WDMA123 Abnormal %d\n", event);
 		hx_event_activate_ISR(g_event[EVT_INDEX_XDMA_WDMA3_ABNORMAL]);
 
 		break;
@@ -557,7 +557,7 @@ static void event_dplib_cb(SENSORDPLIB_STATUS_E event)
 	case SENSORDPLIB_STATUS_XDMA_RDMA_ABNORMAL3:
 	case SENSORDPLIB_STATUS_XDMA_RDMA_ABNORMAL4:
 	case SENSORDPLIB_STATUS_XDMA_RDMA_ABNORMAL5:
-		//dbg_printf(DBG_DP_EVENT_MSG,"RDMA Abnormal %d\n", event);
+		// dbg_printf(DBG_DP_EVENT_MSG,"RDMA Abnormal %d\n", event);
 		hx_event_activate_ISR(g_event[EVT_INDEX_XDMA_RDMA_ABNORMAL]);
 		break;
 
@@ -581,7 +581,7 @@ static void event_dplib_cb(SENSORDPLIB_STATUS_E event)
 		break;
 	default:
 #ifndef __GNU__
-		dbg_printf(DBG_LESS_INFO,"Other Event %d\n", event);
+		dbg_printf(DBG_LESS_INFO, "Other Event %d\n", event);
 #endif
 		break;
 	}
@@ -593,12 +593,11 @@ static void hxautoi2c_noack_cb(uint8_t event)
 	dbg_printf(DBG_LESS_INFO, "INT RAW status   = 0x%02X\r\n", hx_drv_hxautoi2c_get_rawstatus());
 	dbg_printf(DBG_LESS_INFO, "NOACK FSM status = 0x%02X\r\n", hx_drv_hxautoi2c_get_noackstatus());
 
-    hx_drv_hxautoi2c_clr_noack_int(HXAUTOI2CHC_INTSTATUS_DATA_NO_ACK);
-    hx_drv_hxautoi2c_clr_noack_int(HXAUTOI2CHC_INTSTATUS_ADDR_NO_ACK);
+	hx_drv_hxautoi2c_clr_noack_int(HXAUTOI2CHC_INTSTATUS_DATA_NO_ACK);
+	hx_drv_hxautoi2c_clr_noack_int(HXAUTOI2CHC_INTSTATUS_ADDR_NO_ACK);
 
 	hx_event_activate_ISR(g_event[EVT_INDEX_HXAUTOI2C_ERR]);
 }
-
 
 /**
  * \brief	Callback function for 1Bit INP Parser Error
@@ -609,13 +608,15 @@ static void hxautoi2c_noack_cb(uint8_t event)
  */
 uint8_t evt_1bitParser_err_cb(void)
 {
-	dbg_printf(DBG_DP_EVENT_MSG,"EVENT EVT_INDEX_1BITPARSER_ERR TRIGGERED\n");
+	dbg_printf(DBG_DP_EVENT_MSG, "EVENT EVT_INDEX_1BITPARSER_ERR TRIGGERED\n");
 
-	if(g_event_cb != NULL)
+	if (g_event_cb != NULL)
 	{
 		g_event_cb(EVT_INDEX_1BITPARSER_ERR);
-	}else{
-		dbg_printf(DBG_LESS_INFO,"EVT_INDEX_1BITPARSER_ERR g_event_cb == NULL\n");
+	}
+	else
+	{
+		dbg_printf(DBG_LESS_INFO, "EVT_INDEX_1BITPARSER_ERR g_event_cb == NULL\n");
 	}
 	return HX_EVENT_RETURN_DONE;
 }
@@ -629,13 +630,15 @@ uint8_t evt_1bitParser_err_cb(void)
  */
 uint8_t evt_CDM_fifo_err_cb(void)
 {
-	dbg_printf(DBG_DP_EVENT_MSG,"EVENT EVT_INDEX_CDM_FIFO_ERR TRIGGERED\n");
+	dbg_printf(DBG_DP_EVENT_MSG, "EVENT EVT_INDEX_CDM_FIFO_ERR TRIGGERED\n");
 
-	if(g_event_cb != NULL)
+	if (g_event_cb != NULL)
 	{
 		g_event_cb(EVT_INDEX_CDM_FIFO_ERR);
-	}else{
-		dbg_printf(DBG_LESS_INFO,"EVT_INDEX_CDM_FIFO_ERR g_event_cb == NULL\n");
+	}
+	else
+	{
+		dbg_printf(DBG_LESS_INFO, "EVT_INDEX_CDM_FIFO_ERR g_event_cb == NULL\n");
 	}
 	return HX_EVENT_RETURN_DONE;
 }
@@ -649,13 +652,15 @@ uint8_t evt_CDM_fifo_err_cb(void)
  */
 uint8_t evt_WDMA1_err_cb(void)
 {
-	dbg_printf(DBG_DP_EVENT_MSG,"EVENT EVT_INDEX_XDMA_WDMA1_ABNORMAL TRIGGERED\n");
+	dbg_printf(DBG_DP_EVENT_MSG, "EVENT EVT_INDEX_XDMA_WDMA1_ABNORMAL TRIGGERED\n");
 
-	if(g_event_cb != NULL)
+	if (g_event_cb != NULL)
 	{
 		g_event_cb(EVT_INDEX_XDMA_WDMA1_ABNORMAL);
-	}else{
-		dbg_printf(DBG_LESS_INFO,"EVT_INDEX_XDMA_WDMA1_ABNORMAL g_event_cb == NULL\n");
+	}
+	else
+	{
+		dbg_printf(DBG_LESS_INFO, "EVT_INDEX_XDMA_WDMA1_ABNORMAL g_event_cb == NULL\n");
 	}
 	return HX_EVENT_RETURN_DONE;
 }
@@ -669,13 +674,15 @@ uint8_t evt_WDMA1_err_cb(void)
  */
 uint8_t evt_WDMA2_err_cb(void)
 {
-	dbg_printf(DBG_DP_EVENT_MSG,"EVENT EVT_INDEX_XDMA_WDMA2_ABNORMAL TRIGGERED\n");
+	dbg_printf(DBG_DP_EVENT_MSG, "EVENT EVT_INDEX_XDMA_WDMA2_ABNORMAL TRIGGERED\n");
 
-	if(g_event_cb != NULL)
+	if (g_event_cb != NULL)
 	{
 		g_event_cb(EVT_INDEX_XDMA_WDMA2_ABNORMAL);
-	}else{
-		dbg_printf(DBG_LESS_INFO,"EVT_INDEX_XDMA_WDMA2_ABNORMAL g_event_cb == NULL\n");
+	}
+	else
+	{
+		dbg_printf(DBG_LESS_INFO, "EVT_INDEX_XDMA_WDMA2_ABNORMAL g_event_cb == NULL\n");
 	}
 	return HX_EVENT_RETURN_DONE;
 }
@@ -689,13 +696,15 @@ uint8_t evt_WDMA2_err_cb(void)
  */
 uint8_t evt_WDMA3_err_cb(void)
 {
-	dbg_printf(DBG_DP_EVENT_MSG,"EVENT EVT_INDEX_XDMA_WDMA3_ABNORMAL TRIGGERED\n");
+	dbg_printf(DBG_DP_EVENT_MSG, "EVENT EVT_INDEX_XDMA_WDMA3_ABNORMAL TRIGGERED\n");
 
-	if(g_event_cb != NULL)
+	if (g_event_cb != NULL)
 	{
 		g_event_cb(EVT_INDEX_XDMA_WDMA3_ABNORMAL);
-	}else{
-		dbg_printf(DBG_LESS_INFO,"EVT_INDEX_XDMA_WDMA3_ABNORMAL g_event_cb == NULL\n");
+	}
+	else
+	{
+		dbg_printf(DBG_LESS_INFO, "EVT_INDEX_XDMA_WDMA3_ABNORMAL g_event_cb == NULL\n");
 	}
 	return HX_EVENT_RETURN_DONE;
 }
@@ -709,13 +718,15 @@ uint8_t evt_WDMA3_err_cb(void)
  */
 uint8_t evt_RDMA_err_cb(void)
 {
-	dbg_printf(DBG_DP_EVENT_MSG,"EVENT EVT_INDEX_XDMA_RDMA_ABNORMAL TRIGGERED\n");
+	dbg_printf(DBG_DP_EVENT_MSG, "EVENT EVT_INDEX_XDMA_RDMA_ABNORMAL TRIGGERED\n");
 
-	if(g_event_cb != NULL)
+	if (g_event_cb != NULL)
 	{
 		g_event_cb(EVT_INDEX_XDMA_RDMA_ABNORMAL);
-	}else{
-		dbg_printf(DBG_LESS_INFO,"EVT_INDEX_XDMA_RDMA_ABNORMAL g_event_cb == NULL\n");
+	}
+	else
+	{
+		dbg_printf(DBG_LESS_INFO, "EVT_INDEX_XDMA_RDMA_ABNORMAL g_event_cb == NULL\n");
 	}
 	return HX_EVENT_RETURN_DONE;
 }
@@ -729,13 +740,15 @@ uint8_t evt_RDMA_err_cb(void)
  */
 uint8_t evt_EDM_WDT1_err_cb(void)
 {
-	dbg_printf(DBG_DP_EVENT_MSG,"EVENT EVT_INDEX_EDM_WDT1_TIMEOUT TRIGGERED\n");
+	dbg_printf(DBG_DP_EVENT_MSG, "EVENT EVT_INDEX_EDM_WDT1_TIMEOUT TRIGGERED\n");
 
-	if(g_event_cb != NULL)
+	if (g_event_cb != NULL)
 	{
 		g_event_cb(EVT_INDEX_EDM_WDT1_TIMEOUT);
-	}else{
-		dbg_printf(DBG_LESS_INFO,"EVT_INDEX_EDM_WDT1_TIMEOUT g_event_cb == NULL\n");
+	}
+	else
+	{
+		dbg_printf(DBG_LESS_INFO, "EVT_INDEX_EDM_WDT1_TIMEOUT g_event_cb == NULL\n");
 	}
 	return HX_EVENT_RETURN_DONE;
 }
@@ -749,13 +762,15 @@ uint8_t evt_EDM_WDT1_err_cb(void)
  */
 uint8_t evt_EDM_WDT2_err_cb(void)
 {
-	dbg_printf(DBG_DP_EVENT_MSG,"EVENT EVT_INDEX_EDM_WDT2_TIMEOUT TRIGGERED\n");
+	dbg_printf(DBG_DP_EVENT_MSG, "EVENT EVT_INDEX_EDM_WDT2_TIMEOUT TRIGGERED\n");
 
-	if(g_event_cb != NULL)
+	if (g_event_cb != NULL)
 	{
 		g_event_cb(EVT_INDEX_EDM_WDT2_TIMEOUT);
-	}else{
-		dbg_printf(DBG_LESS_INFO,"EVT_INDEX_EDM_WDT2_TIMEOUT g_event_cb == NULL\n");
+	}
+	else
+	{
+		dbg_printf(DBG_LESS_INFO, "EVT_INDEX_EDM_WDT2_TIMEOUT g_event_cb == NULL\n");
 	}
 	return HX_EVENT_RETURN_DONE;
 }
@@ -769,13 +784,15 @@ uint8_t evt_EDM_WDT2_err_cb(void)
  */
 uint8_t evt_EDM_WDT3_err_cb(void)
 {
-	dbg_printf(DBG_DP_EVENT_MSG,"EVENT EVT_INDEX_EDM_WDT3_TIMEOUT TRIGGERED\n");
+	dbg_printf(DBG_DP_EVENT_MSG, "EVENT EVT_INDEX_EDM_WDT3_TIMEOUT TRIGGERED\n");
 
-	if(g_event_cb != NULL)
+	if (g_event_cb != NULL)
 	{
 		g_event_cb(EVT_INDEX_EDM_WDT3_TIMEOUT);
-	}else{
-		dbg_printf(DBG_LESS_INFO,"EVT_INDEX_EDM_WDT3_TIMEOUT g_event_cb == NULL\n");
+	}
+	else
+	{
+		dbg_printf(DBG_LESS_INFO, "EVT_INDEX_EDM_WDT3_TIMEOUT g_event_cb == NULL\n");
 	}
 	return HX_EVENT_RETURN_DONE;
 }
@@ -789,13 +806,15 @@ uint8_t evt_EDM_WDT3_err_cb(void)
  */
 uint8_t evt_hxautoi2c_err_cb(void)
 {
-	dbg_printf(DBG_DP_EVENT_MSG,"EVENT EVT_INDEX_HXAUTOI2C_ERR TRIGGERED\n");
+	dbg_printf(DBG_DP_EVENT_MSG, "EVENT EVT_INDEX_HXAUTOI2C_ERR TRIGGERED\n");
 
-	if(g_event_cb != NULL)
+	if (g_event_cb != NULL)
 	{
 		g_event_cb(EVT_INDEX_HXAUTOI2C_ERR);
-	}else{
-		dbg_printf(DBG_LESS_INFO,"EVT_INDEX_HXAUTOI2C_ERR g_event_cb == NULL\n");
+	}
+	else
+	{
+		dbg_printf(DBG_LESS_INFO, "EVT_INDEX_HXAUTOI2C_ERR g_event_cb == NULL\n");
 	}
 	return HX_EVENT_RETURN_DONE;
 }
@@ -809,13 +828,15 @@ uint8_t evt_hxautoi2c_err_cb(void)
  */
 uint8_t evt_CDM_Motion_cb(void)
 {
-	dbg_printf(DBG_DP_EVENT_MSG,"EVENT EVT_INDEX_CDM_MOTION TRIGGERED\n");
+	dbg_printf(DBG_DP_EVENT_MSG, "EVENT EVT_INDEX_CDM_MOTION TRIGGERED\n");
 
-	if(g_event_cb != NULL)
+	if (g_event_cb != NULL)
 	{
 		g_event_cb(EVT_INDEX_CDM_MOTION);
-	}else{
-		dbg_printf(DBG_LESS_INFO,"EVT_INDEX_CDM_MOTION g_event_cb == NULL\n");
+	}
+	else
+	{
+		dbg_printf(DBG_LESS_INFO, "EVT_INDEX_CDM_MOTION g_event_cb == NULL\n");
 	}
 	return HX_EVENT_RETURN_DONE;
 }
@@ -830,14 +851,16 @@ uint8_t evt_CDM_Motion_cb(void)
 uint8_t evt_Sensor_RTC_Fire_cb(void)
 {
 #ifndef __GNU__
-	dbg_printf(DBG_DP_EVENT_MSG,"EVENT EVT_INDEX_SENSOR_RTC_FIRE TRIGGERED\n");
+	dbg_printf(DBG_DP_EVENT_MSG, "EVENT EVT_INDEX_SENSOR_RTC_FIRE TRIGGERED\n");
 #endif
-	if(g_event_cb != NULL)
+	if (g_event_cb != NULL)
 	{
 		g_event_cb(EVT_INDEX_SENSOR_RTC_FIRE);
-	}else{
+	}
+	else
+	{
 #ifndef __GNU__
-		dbg_printf(DBG_LESS_INFO,"EVT_INDEX_SENSOR_RTC_FIRE g_event_cb == NULL\n");
+		dbg_printf(DBG_LESS_INFO, "EVT_INDEX_SENSOR_RTC_FIRE g_event_cb == NULL\n");
 #endif
 	}
 	return HX_EVENT_RETURN_DONE;
@@ -852,14 +875,16 @@ uint8_t evt_Sensor_RTC_Fire_cb(void)
  */
 uint8_t evt_xDMA_FrameReady_cb(void)
 {
-	//dbg_printf(DBG_DP_EVENT_MSG,"EVENT evt_xDMA_FrameReady_cb TRIGGERED\n");
+	// dbg_printf(DBG_DP_EVENT_MSG,"EVENT evt_xDMA_FrameReady_cb TRIGGERED\n");
 
-	if(g_event_cb != NULL)
+	if (g_event_cb != NULL)
 	{
 		g_event_cb(EVT_INDEX_XDMA_FRAME_READY);
-	}else{
+	}
+	else
+	{
 #ifndef __GNU__
-		dbg_printf(DBG_LESS_INFO,"EVT_INDEX_XDMA_FRAME_READY g_event_cb == NULL\n");
+		dbg_printf(DBG_LESS_INFO, "EVT_INDEX_XDMA_FRAME_READY g_event_cb == NULL\n");
 #endif
 	}
 	return HX_EVENT_RETURN_DONE;
@@ -867,12 +892,14 @@ uint8_t evt_xDMA_FrameReady_cb(void)
 
 uint8_t evt_Pilboi_BtnDown_cb(void)
 {
-	if(g_event_cb != NULL)
+	if (g_event_cb != NULL)
 	{
 		g_event_cb(EVT_INDEX_PILBOI_BTN_DOWN);
-	}else{
+	}
+	else
+	{
 #ifndef __GNU__
-		dbg_printf(DBG_LESS_INFO,"EVT_INDEX_PILBOI_BTN_DOWN g_event_cb == NULL\n");
+		dbg_printf(DBG_LESS_INFO, "EVT_INDEX_PILBOI_BTN_DOWN g_event_cb == NULL\n");
 #endif
 	}
 	return HX_EVENT_RETURN_DONE;
@@ -880,24 +907,28 @@ uint8_t evt_Pilboi_BtnDown_cb(void)
 
 uint8_t evt_Pilboi_BtnUp_cb(void)
 {
-	if(g_event_cb != NULL)
+	if (g_event_cb != NULL)
 	{
 		g_event_cb(EVT_INDEX_PILBOI_BTN_UP);
-	}else{
+	}
+	else
+	{
 #ifndef __GNU__
-		dbg_printf(DBG_LESS_INFO,"EVT_INDEX_PILBOI_BTN_UP g_event_cb == NULL\n");
+		dbg_printf(DBG_LESS_INFO, "EVT_INDEX_PILBOI_BTN_UP g_event_cb == NULL\n");
 #endif
 	}
 	return HX_EVENT_RETURN_DONE;
 }
 uint8_t evt_Pilboi_Next_cb(void)
 {
-	if(g_event_cb != NULL)
+	if (g_event_cb != NULL)
 	{
 		g_event_cb(EVT_PILBOI_NEXT);
-	}else{
+	}
+	else
+	{
 #ifndef __GNU__
-		dbg_printf(DBG_LESS_INFO,"EVT_PILBOI_NEXT g_event_cb == NULL\n");
+		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_NEXT g_event_cb == NULL\n");
 #endif
 	}
 	return HX_EVENT_RETURN_DONE;
@@ -905,24 +936,28 @@ uint8_t evt_Pilboi_Next_cb(void)
 
 uint8_t evt_Pilboi_OdDone_cb(void)
 {
-	if(g_event_cb != NULL)
+	if (g_event_cb != NULL)
 	{
 		g_event_cb(EVT_PILBOI_OD_DONE);
-	}else{
+	}
+	else
+	{
 #ifndef __GNU__
-		dbg_printf(DBG_LESS_INFO,"EVT_PILBOI_OD_DONE g_event_cb == NULL\n");
+		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_OD_DONE g_event_cb == NULL\n");
 #endif
 	}
 	return HX_EVENT_RETURN_DONE;
 }
 uint8_t evt_Pilboi_PillNotFov_cb(void)
 {
-	if(g_event_cb != NULL)
+	if (g_event_cb != NULL)
 	{
 		g_event_cb(EVT_PILBOI_PILL_NOT_FOV);
-	}else{
+	}
+	else
+	{
 #ifndef __GNU__
-		dbg_printf(DBG_LESS_INFO,"EVT_PILBOI_PILL_NOT_FOV g_event_cb == NULL\n");
+		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_PILL_NOT_FOV g_event_cb == NULL\n");
 #endif
 	}
 	return HX_EVENT_RETURN_DONE;
@@ -930,36 +965,56 @@ uint8_t evt_Pilboi_PillNotFov_cb(void)
 
 uint8_t evt_Pilboi_PillFov_cb(void)
 {
-	if(g_event_cb != NULL)
+	if (g_event_cb != NULL)
 	{
 		g_event_cb(EVT_PILBOI_PILL_FOV);
-	}else{
+	}
+	else
+	{
 #ifndef __GNU__
-		dbg_printf(DBG_LESS_INFO,"EVT_PILBOI_PILL_FOV g_event_cb == NULL\n");
+		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_PILL_FOV g_event_cb == NULL\n");
 #endif
 	}
 	return HX_EVENT_RETURN_DONE;
 }
 uint8_t evt_Pilboi_PillNotId_cb(void)
 {
-	if(g_event_cb != NULL)
+	if (g_event_cb != NULL)
 	{
 		g_event_cb(EVT_PILBOI_PILL_NOT_ID);
-	}else{
+	}
+	else
+	{
 #ifndef __GNU__
-		dbg_printf(DBG_LESS_INFO,"EVT_PILBOI_PILL_NOT_ID g_event_cb == NULL\n");
+		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_PILL_NOT_ID g_event_cb == NULL\n");
 #endif
 	}
 	return HX_EVENT_RETURN_DONE;
 }
 uint8_t evt_Pilboi_PillId_cb(void)
 {
-	if(g_event_cb != NULL)
+	if (g_event_cb != NULL)
 	{
 		g_event_cb(EVT_PILBOI_PILL_ID);
-	}else{
+	}
+	else
+	{
 #ifndef __GNU__
-		dbg_printf(DBG_LESS_INFO,"EVT_PILBOI_PILL_ID g_event_cb == NULL\n");
+		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_PILL_ID g_event_cb == NULL\n");
+#endif
+	}
+	return HX_EVENT_RETURN_DONE;
+}
+uint8_t evt_Pilboi_PillCenter_cb(void)
+{
+	if (g_event_cb != NULL)
+	{
+		g_event_cb(EVT_PILBOI_PILL_CENTER);
+	}
+	else
+	{
+#ifndef __GNU__
+		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_PILL_CENTER g_event_cb == NULL\n");
 #endif
 	}
 	return HX_EVENT_RETURN_DONE;
@@ -1546,7 +1601,6 @@ uint8_t evt_ADCRTC_cb(void)
 }
 #endif
 
-
 /*
  * @brief register DP lib DataPath Status callback
  *
@@ -1556,12 +1610,12 @@ uint8_t evt_ADCRTC_cb(void)
  * @param type register library callback function type (Sensor DP, HOG, RS, JPEG_DEC)
  * @return void.
  * */
-void hx_dplib_evthandler_register_cb(evthandlerdp_CBEvent_t  cb_event, SENSORDPLIB_CB_FUNTYPE_E cb_type)
+void hx_dplib_evthandler_register_cb(evthandlerdp_CBEvent_t cb_event, SENSORDPLIB_CB_FUNTYPE_E cb_type)
 {
 	g_event_cb = cb_event;
 	hx_dplib_register_cb(event_dplib_cb, cb_type);
 #ifdef EVT_DATAPATH_AUTOI2C
-    hx_drv_hxautoi2c_register_cb(hxautoi2c_noack_cb);
+	hx_drv_hxautoi2c_register_cb(hxautoi2c_noack_cb);
 #endif
 }
 

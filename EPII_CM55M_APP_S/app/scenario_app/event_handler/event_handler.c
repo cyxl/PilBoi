@@ -77,30 +77,24 @@
  * Constant Definition                              *
  ***************************************************/
 // EVT Priority : lower value with higher priority
-#define EVT_PRIORITY_HIGHEST	(0)
-#define EVT_PRIORITY_L2			(64)
-#define EVT_PRIORITY_L3			(128)
-#define EVT_PRIORITY_LOWEST		(255)
-
+#define EVT_PRIORITY_HIGHEST (0)
+#define EVT_PRIORITY_L2 (64)
+#define EVT_PRIORITY_L3 (128)
+#define EVT_PRIORITY_LOWEST (255)
 
 /***************************************************
  * Macro Definition
  **************************************************/
 
-
 /***************************************************
  * Static Function Declaration
  **************************************************/
-static void idle(void);		// event idle function which use to override the built-in function in event library
-
-
+static void idle(void); // event idle function which use to override the built-in function in event library
 
 /****************************************************
  * Variable Declaration                             *
  ***************************************************/
 hx_event_t g_event[HX_EVENTQUE_MAXSIZE];
-
-
 
 /***************************************************
  * Function Implementation
@@ -118,25 +112,34 @@ void event_handler_init(void)
     evt_i2ccomm_init(USE_DW_IIC_SLV_0);
     hx_event_create(&g_event[EVT_INDEX_I2CS_0_RX]);
 
-    if(g_event[EVT_INDEX_I2CS_0_RX] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_I2CS_0_RX\n");
-    }else{
+    if (g_event[EVT_INDEX_I2CS_0_RX] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_I2CS_0_RX\n");
+    }
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_I2CS_0_RX], evt_i2ccomm_0_rx_cb);
         hx_event_set_priority(g_event[EVT_INDEX_I2CS_0_RX], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_INDEX_I2CS_0_TX]);
-    if(g_event[EVT_INDEX_I2CS_0_TX] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_I2CS_0_TX\n");
-    }else{
+    if (g_event[EVT_INDEX_I2CS_0_TX] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_I2CS_0_TX\n");
+    }
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_I2CS_0_TX], evt_i2ccomm_0_tx_cb);
         hx_event_set_priority(g_event[EVT_INDEX_I2CS_0_TX], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_INDEX_I2CS_0_ERR]);
-    if(g_event[EVT_INDEX_I2CS_0_ERR] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_I2CS_0_ERR\n");
-    }else{
+    if (g_event[EVT_INDEX_I2CS_0_ERR] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_I2CS_0_ERR\n");
+    }
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_I2CS_0_ERR], evt_i2ccomm_0_err_cb);
         hx_event_set_priority(g_event[EVT_INDEX_I2CS_0_ERR], EVT_PRIORITY_HIGHEST);
     }
@@ -146,25 +149,34 @@ void event_handler_init(void)
     evt_i2ccomm_init(USE_DW_IIC_SLV_1);
 
     hx_event_create(&g_event[EVT_INDEX_I2CS_1_RX]);
-    if(g_event[EVT_INDEX_I2CS_1_RX] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_I2CS_1_RX\n");
-    }else{
+    if (g_event[EVT_INDEX_I2CS_1_RX] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_I2CS_1_RX\n");
+    }
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_I2CS_1_RX], evt_i2ccomm_1_rx_cb);
         hx_event_set_priority(g_event[EVT_INDEX_I2CS_1_RX], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_INDEX_I2CS_1_TX]);
-    if(g_event[EVT_INDEX_I2CS_1_TX] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_I2CS_1_TX\n");
-    }else{
+    if (g_event[EVT_INDEX_I2CS_1_TX] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_I2CS_1_TX\n");
+    }
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_I2CS_1_TX], evt_i2ccomm_1_tx_cb);
         hx_event_set_priority(g_event[EVT_INDEX_I2CS_1_TX], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_INDEX_I2CS_1_ERR]);
-    if(g_event[EVT_INDEX_I2CS_1_ERR] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_I2CS_1_ERR\n");
-    }else{
+    if (g_event[EVT_INDEX_I2CS_1_ERR] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_I2CS_1_ERR\n");
+    }
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_I2CS_1_ERR], evt_i2ccomm_1_err_cb);
         hx_event_set_priority(g_event[EVT_INDEX_I2CS_1_ERR], EVT_PRIORITY_HIGHEST);
     }
@@ -173,130 +185,156 @@ void event_handler_init(void)
 #ifdef EVT_DATAPATH
     // Create and register callback for EVT_INDEX_1BITPARSER_ERR
     hx_event_create(&g_event[EVT_INDEX_1BITPARSER_ERR]);
-    if(g_event[EVT_INDEX_1BITPARSER_ERR] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_1BITPARSER_ERR\n");
+    if (g_event[EVT_INDEX_1BITPARSER_ERR] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_1BITPARSER_ERR\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_1BITPARSER_ERR], evt_1bitParser_err_cb);
         hx_event_set_priority(g_event[EVT_INDEX_1BITPARSER_ERR], EVT_PRIORITY_HIGHEST);
     }
 
     // Create and register callback for EVT_INDEX_CDM_FIFO_ERR
     hx_event_create(&g_event[EVT_INDEX_CDM_FIFO_ERR]);
-    if(g_event[EVT_INDEX_CDM_FIFO_ERR] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_CDM_FIFO_ERR\n");
+    if (g_event[EVT_INDEX_CDM_FIFO_ERR] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_CDM_FIFO_ERR\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_CDM_FIFO_ERR], evt_CDM_fifo_err_cb);
         hx_event_set_priority(g_event[EVT_INDEX_CDM_FIFO_ERR], EVT_PRIORITY_HIGHEST);
     }
 
     // Create and register callback for EVT_INDEX_XDMA_WDMA1_ABNORMAL
     hx_event_create(&g_event[EVT_INDEX_XDMA_WDMA1_ABNORMAL]);
-    if(g_event[EVT_INDEX_XDMA_WDMA1_ABNORMAL] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_XDMA_WDMA1_ABNORMAL\n");
+    if (g_event[EVT_INDEX_XDMA_WDMA1_ABNORMAL] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_XDMA_WDMA1_ABNORMAL\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_XDMA_WDMA1_ABNORMAL], evt_WDMA1_err_cb);
         hx_event_set_priority(g_event[EVT_INDEX_XDMA_WDMA1_ABNORMAL], EVT_PRIORITY_HIGHEST);
     }
 
     // Create and register callback for EVT_INDEX_XDMA_WDMA2_ABNORMAL
     hx_event_create(&g_event[EVT_INDEX_XDMA_WDMA2_ABNORMAL]);
-    if(g_event[EVT_INDEX_XDMA_WDMA2_ABNORMAL] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_XDMA_WDMA2_ABNORMAL\n");
+    if (g_event[EVT_INDEX_XDMA_WDMA2_ABNORMAL] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_XDMA_WDMA2_ABNORMAL\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_XDMA_WDMA2_ABNORMAL], evt_WDMA2_err_cb);
         hx_event_set_priority(g_event[EVT_INDEX_XDMA_WDMA2_ABNORMAL], EVT_PRIORITY_HIGHEST);
     }
 
     // Create and register callback for EVT_INDEX_XDMA_WDMA3_ABNORMAL
     hx_event_create(&g_event[EVT_INDEX_XDMA_WDMA3_ABNORMAL]);
-    if(g_event[EVT_INDEX_XDMA_WDMA3_ABNORMAL] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_XDMA_WDMA3_ABNORMAL\n");
+    if (g_event[EVT_INDEX_XDMA_WDMA3_ABNORMAL] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_XDMA_WDMA3_ABNORMAL\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_XDMA_WDMA3_ABNORMAL], evt_WDMA3_err_cb);
         hx_event_set_priority(g_event[EVT_INDEX_XDMA_WDMA3_ABNORMAL], EVT_PRIORITY_HIGHEST);
     }
 
     // Create and register callback for EVT_INDEX_XDMA_RDMA_ABNORMAL
     hx_event_create(&g_event[EVT_INDEX_XDMA_RDMA_ABNORMAL]);
-    if(g_event[EVT_INDEX_XDMA_RDMA_ABNORMAL] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_XDMA_RDMA_ABNORMAL\n");
+    if (g_event[EVT_INDEX_XDMA_RDMA_ABNORMAL] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_XDMA_RDMA_ABNORMAL\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_XDMA_RDMA_ABNORMAL], evt_RDMA_err_cb);
         hx_event_set_priority(g_event[EVT_INDEX_XDMA_RDMA_ABNORMAL], EVT_PRIORITY_HIGHEST);
     }
 
     // Create and register callback for EVT_INDEX_EDM_WDT1_TIMEOUT
     hx_event_create(&g_event[EVT_INDEX_EDM_WDT1_TIMEOUT]);
-    if(g_event[EVT_INDEX_EDM_WDT1_TIMEOUT] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_EDM_WDT1_TIMEOUT\n");
+    if (g_event[EVT_INDEX_EDM_WDT1_TIMEOUT] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_EDM_WDT1_TIMEOUT\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_EDM_WDT1_TIMEOUT], evt_EDM_WDT1_err_cb);
         hx_event_set_priority(g_event[EVT_INDEX_EDM_WDT1_TIMEOUT], EVT_PRIORITY_HIGHEST);
     }
 
     // Create and register callback for EVT_INDEX_EDM_WDT2_TIMEOUT
     hx_event_create(&g_event[EVT_INDEX_EDM_WDT2_TIMEOUT]);
-    if(g_event[EVT_INDEX_EDM_WDT2_TIMEOUT] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_EDM_WDT2_TIMEOUT\n");
+    if (g_event[EVT_INDEX_EDM_WDT2_TIMEOUT] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_EDM_WDT2_TIMEOUT\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_EDM_WDT2_TIMEOUT], evt_EDM_WDT2_err_cb);
         hx_event_set_priority(g_event[EVT_INDEX_EDM_WDT2_TIMEOUT], EVT_PRIORITY_HIGHEST);
     }
 
     // Create and register callback for EVT_INDEX_EDM_WDT3_TIMEOUT
     hx_event_create(&g_event[EVT_INDEX_EDM_WDT3_TIMEOUT]);
-    if(g_event[EVT_INDEX_EDM_WDT3_TIMEOUT] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_EDM_WDT3_TIMEOUT\n");
+    if (g_event[EVT_INDEX_EDM_WDT3_TIMEOUT] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_EDM_WDT3_TIMEOUT\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_EDM_WDT3_TIMEOUT], evt_EDM_WDT3_err_cb);
         hx_event_set_priority(g_event[EVT_INDEX_EDM_WDT3_TIMEOUT], EVT_PRIORITY_HIGHEST);
     }
 
     // Create and register callback for EVT_INDEX_CDM_MOTION
     hx_event_create(&g_event[EVT_INDEX_CDM_MOTION]);
-    if(g_event[EVT_INDEX_CDM_MOTION] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_CDM_MOTION\n");
+    if (g_event[EVT_INDEX_CDM_MOTION] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_CDM_MOTION\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_CDM_MOTION], evt_CDM_Motion_cb);
         hx_event_set_priority(g_event[EVT_INDEX_CDM_MOTION], EVT_PRIORITY_HIGHEST);
     }
 
     // Create and register callback for EVT_INDEX_XDMA_FRAME_READY
     hx_event_create(&g_event[EVT_INDEX_XDMA_FRAME_READY]);
-    if(g_event[EVT_INDEX_XDMA_FRAME_READY] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_XDMA_FRAME_READY\n");
+    if (g_event[EVT_INDEX_XDMA_FRAME_READY] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_XDMA_FRAME_READY\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_XDMA_FRAME_READY], evt_xDMA_FrameReady_cb);
         hx_event_set_priority(g_event[EVT_INDEX_XDMA_FRAME_READY], EVT_PRIORITY_HIGHEST);
     }
 
     // Create and register callback for EVT_INDEX_SENSOR_RTC_FIRE
     hx_event_create(&g_event[EVT_INDEX_SENSOR_RTC_FIRE]);
-    if(g_event[EVT_INDEX_SENSOR_RTC_FIRE] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_SENSOR_RTC_FIRE\n");
+    if (g_event[EVT_INDEX_SENSOR_RTC_FIRE] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_SENSOR_RTC_FIRE\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_SENSOR_RTC_FIRE], evt_Sensor_RTC_Fire_cb);
         hx_event_set_priority(g_event[EVT_INDEX_SENSOR_RTC_FIRE], EVT_PRIORITY_HIGHEST);
     }
 #ifdef EVT_DATAPATH_AUTOI2C
     // Create and register callback for EVT_INDEX_HXAUTOI2C_ERR
     hx_event_create(&g_event[EVT_INDEX_HXAUTOI2C_ERR]);
-    if(g_event[EVT_INDEX_HXAUTOI2C_ERR] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_HXAUTOI2C_ERR\n");
+    if (g_event[EVT_INDEX_HXAUTOI2C_ERR] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_HXAUTOI2C_ERR\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_HXAUTOI2C_ERR], evt_hxautoi2c_err_cb);
         hx_event_set_priority(g_event[EVT_INDEX_HXAUTOI2C_ERR], EVT_PRIORITY_HIGHEST);
     }
@@ -306,227 +344,274 @@ void event_handler_init(void)
 #ifdef EVT_DATAPATH_EXT
     // Create and register callback for EVT_INDEX_PGPIO0
     hx_event_create(&g_event[EVT_INDEX_PGPIO0]);
-    if(g_event[EVT_INDEX_PGPIO0] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_PGPIO0\n");
+    if (g_event[EVT_INDEX_PGPIO0] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_PGPIO0\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_PGPIO0], evt_PGPIO0_cb);
         hx_event_set_priority(g_event[EVT_INDEX_PGPIO0], EVT_PRIORITY_HIGHEST);
     }
 
     // Create and register callback for EVT_INDEX_PGPIO1
     hx_event_create(&g_event[EVT_INDEX_PGPIO1]);
-    if(g_event[EVT_INDEX_PGPIO1] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_PGPIO1\n");
+    if (g_event[EVT_INDEX_PGPIO1] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_PGPIO1\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_PGPIO1], evt_PGPIO1_cb);
         hx_event_set_priority(g_event[EVT_INDEX_PGPIO1], EVT_PRIORITY_HIGHEST);
     }
 
     // Create and register callback for EVT_INDEX_PGPIO2
     hx_event_create(&g_event[EVT_INDEX_PGPIO2]);
-    if(g_event[EVT_INDEX_PGPIO2] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_PGPIO2\n");
+    if (g_event[EVT_INDEX_PGPIO2] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_PGPIO2\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_PGPIO2], evt_PGPIO2_cb);
         hx_event_set_priority(g_event[EVT_INDEX_PGPIO2], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_INDEX_PGPIO3]);
-    if(g_event[EVT_INDEX_PGPIO3] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_PGPIO3\n");
+    if (g_event[EVT_INDEX_PGPIO3] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_PGPIO3\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_PGPIO3], evt_PGPIO3_cb);
         hx_event_set_priority(g_event[EVT_INDEX_PGPIO3], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_INDEX_PGPIO4]);
-    if(g_event[EVT_INDEX_PGPIO4] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_PGPIO4\n");
+    if (g_event[EVT_INDEX_PGPIO4] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_PGPIO4\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_PGPIO4], evt_PGPIO4_cb);
         hx_event_set_priority(g_event[EVT_INDEX_PGPIO4], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_INDEX_PGPIO5]);
-    if(g_event[EVT_INDEX_PGPIO5] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_PGPIO5\n");
+    if (g_event[EVT_INDEX_PGPIO5] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_PGPIO5\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_PGPIO5], evt_PGPIO5_cb);
         hx_event_set_priority(g_event[EVT_INDEX_PGPIO5], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_INDEX_PGPIO6]);
-    if(g_event[EVT_INDEX_PGPIO6] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_PGPIO6\n");
+    if (g_event[EVT_INDEX_PGPIO6] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_PGPIO6\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_PGPIO6], evt_PGPIO6_cb);
         hx_event_set_priority(g_event[EVT_INDEX_PGPIO6], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_INDEX_PGPIO7]);
-    if(g_event[EVT_INDEX_PGPIO7] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_PGPIO7\n");
+    if (g_event[EVT_INDEX_PGPIO7] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_PGPIO7\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_PGPIO7], evt_PGPIO7_cb);
         hx_event_set_priority(g_event[EVT_INDEX_PGPIO7], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_INDEX_PGPIO8]);
-    if(g_event[EVT_INDEX_PGPIO8] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_PGPIO8\n");
+    if (g_event[EVT_INDEX_PGPIO8] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_PGPIO8\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_PGPIO8], evt_PGPIO8_cb);
         hx_event_set_priority(g_event[EVT_INDEX_PGPIO8], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_INDEX_PGPIO9]);
-    if(g_event[EVT_INDEX_PGPIO9] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_PGPIO9\n");
+    if (g_event[EVT_INDEX_PGPIO9] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_PGPIO9\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_PGPIO9], evt_PGPIO9_cb);
         hx_event_set_priority(g_event[EVT_INDEX_PGPIO9], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_INDEX_PGPIO10]);
-    if(g_event[EVT_INDEX_PGPIO10] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_PGPIO10\n");
+    if (g_event[EVT_INDEX_PGPIO10] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_PGPIO10\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_PGPIO10], evt_PGPIO10_cb);
         hx_event_set_priority(g_event[EVT_INDEX_PGPIO10], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_INDEX_PGPIO11]);
-    if(g_event[EVT_INDEX_PGPIO11] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_PGPIO11\n");
+    if (g_event[EVT_INDEX_PGPIO11] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_PGPIO11\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_PGPIO11], evt_PGPIO11_cb);
         hx_event_set_priority(g_event[EVT_INDEX_PGPIO11], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_INDEX_PGPIO12]);
-    if(g_event[EVT_INDEX_PGPIO12] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_PGPIO12\n");
+    if (g_event[EVT_INDEX_PGPIO12] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_PGPIO12\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_PGPIO12], evt_PGPIO12_cb);
         hx_event_set_priority(g_event[EVT_INDEX_PGPIO12], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_INDEX_PGPIO13]);
-    if(g_event[EVT_INDEX_PGPIO13] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_PGPIO13\n");
+    if (g_event[EVT_INDEX_PGPIO13] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_PGPIO13\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_PGPIO13], evt_PGPIO13_cb);
         hx_event_set_priority(g_event[EVT_INDEX_PGPIO13], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_INDEX_PGPIO14]);
-    if(g_event[EVT_INDEX_PGPIO14] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_PGPIO14\n");
+    if (g_event[EVT_INDEX_PGPIO14] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_PGPIO14\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_PGPIO14], evt_PGPIO14_cb);
         hx_event_set_priority(g_event[EVT_INDEX_PGPIO14], EVT_PRIORITY_HIGHEST);
     }
 
-
     hx_event_create(&g_event[EVT_INDEX_SGPIO0]);
-    if(g_event[EVT_INDEX_SGPIO0] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_SGPIO0\n");
+    if (g_event[EVT_INDEX_SGPIO0] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_SGPIO0\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_SGPIO0], evt_SGPIO0_cb);
         hx_event_set_priority(g_event[EVT_INDEX_SGPIO0], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_INDEX_SGPIO1]);
-    if(g_event[EVT_INDEX_SGPIO1] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_SGPIO1\n");
+    if (g_event[EVT_INDEX_SGPIO1] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_SGPIO1\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_SGPIO1], evt_SGPIO1_cb);
         hx_event_set_priority(g_event[EVT_INDEX_SGPIO1], EVT_PRIORITY_HIGHEST);
     }
 
     // Create and register callback for EVT_INDEX_ADC_CH0
     hx_event_create(&g_event[EVT_INDEX_ADC_CH0]);
-    if(g_event[EVT_INDEX_ADC_CH0] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_ADC_CH0\n");
+    if (g_event[EVT_INDEX_ADC_CH0] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_ADC_CH0\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_ADC_CH0], evt_ADC_Ch0_cb);
         hx_event_set_priority(g_event[EVT_INDEX_ADC_CH0], EVT_PRIORITY_HIGHEST);
     }
 
     // Create and register callback for EVT_INDEX_ADC_CH1
     hx_event_create(&g_event[EVT_INDEX_ADC_CH1]);
-    if(g_event[EVT_INDEX_ADC_CH1] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_ADC_CH1\n");
+    if (g_event[EVT_INDEX_ADC_CH1] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_ADC_CH1\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_ADC_CH1], evt_ADC_Ch1_cb);
         hx_event_set_priority(g_event[EVT_INDEX_ADC_CH1], EVT_PRIORITY_HIGHEST);
     }
 
     // Create and register callback for EVT_INDEX_ADC_CH2
     hx_event_create(&g_event[EVT_INDEX_ADC_CH2]);
-    if(g_event[EVT_INDEX_ADC_CH2] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_ADC_CH2\n");
+    if (g_event[EVT_INDEX_ADC_CH2] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_ADC_CH2\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_ADC_CH2], evt_ADC_Ch2_cb);
         hx_event_set_priority(g_event[EVT_INDEX_ADC_CH2], EVT_PRIORITY_HIGHEST);
     }
 
     // Create and register callback for EVT_INDEX_ADC_CH3
     hx_event_create(&g_event[EVT_INDEX_ADC_CH3]);
-    if(g_event[EVT_INDEX_ADC_CH3] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_ADC_CH3\n");
+    if (g_event[EVT_INDEX_ADC_CH3] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_ADC_CH3\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_ADC_CH3], evt_ADC_Ch3_cb);
         hx_event_set_priority(g_event[EVT_INDEX_ADC_CH3], EVT_PRIORITY_HIGHEST);
     }
 
     // Create and register callback for EVT_INDEX_ADC_CFG_INT
     hx_event_create(&g_event[EVT_INDEX_ADC_CFG_INT]);
-    if(g_event[EVT_INDEX_ADC_CFG_INT] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_ADC_CFG_INT\n");
+    if (g_event[EVT_INDEX_ADC_CFG_INT] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_ADC_CFG_INT\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_ADC_CFG_INT], evt_ADC_CFG_cb);
         hx_event_set_priority(g_event[EVT_INDEX_ADC_CFG_INT], EVT_PRIORITY_HIGHEST);
     }
 
     // Create and register callback for EVT_INDEX_SENSOR_RTC
     hx_event_create(&g_event[EVT_INDEX_SENSOR_RTC]);
-    if(g_event[EVT_INDEX_SENSOR_RTC] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_SENSOR_RTC\n");
+    if (g_event[EVT_INDEX_SENSOR_RTC] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_SENSOR_RTC\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_SENSOR_RTC], evt_SensorRTC_cb);
         hx_event_set_priority(g_event[EVT_INDEX_SENSOR_RTC], EVT_PRIORITY_HIGHEST);
     }
 
     // Create and register callback for EVT_INDEX_ADC_RTC
     hx_event_create(&g_event[EVT_INDEX_ADC_RTC]);
-    if(g_event[EVT_INDEX_ADC_RTC] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_ADC_RTC\n");
+    if (g_event[EVT_INDEX_ADC_RTC] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_ADC_RTC\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_ADC_RTC], evt_ADCRTC_cb);
         hx_event_set_priority(g_event[EVT_INDEX_ADC_RTC], EVT_PRIORITY_HIGHEST);
     }
@@ -541,20 +626,24 @@ void event_handler_init(void)
 
     // Create and register callback for SPIM_RX
     hx_event_create(&g_event[EVT_INDEX_SPIM1_RX]);
-    if(g_event[EVT_INDEX_SPIM1_RX] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for INFRA_EVT_SPIM1_RX\n");
+    if (g_event[EVT_INDEX_SPIM1_RX] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for INFRA_EVT_SPIM1_RX\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_SPIM1_RX], evt_spimcomm_rx_cb);
         hx_event_set_priority(g_event[EVT_INDEX_SPIM1_RX], EVT_PRIORITY_HIGHEST);
     }
 
     // Create and register callback for SPIM_TX
     hx_event_create(&g_event[EVT_INDEX_SPIM1_TX]);
-    if(g_event[EVT_INDEX_SPIM1_TX] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for INFRA_EVT_SPIM1_TX\n");
+    if (g_event[EVT_INDEX_SPIM1_TX] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for INFRA_EVT_SPIM1_TX\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_SPIM1_TX], evt_spimcomm_tx_cb);
         hx_event_set_priority(g_event[EVT_INDEX_SPIM1_TX], EVT_PRIORITY_HIGHEST);
     }
@@ -565,15 +654,17 @@ void event_handler_init(void)
 
     // Create and register callback for SPIS_RX
     hx_event_create(&g_event[EVT_INDEX_SPIS_RX]);
-    if(g_event[EVT_INDEX_SPIS_RX] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for INFRA_EVT_SPIS_RX \n");
+    if (g_event[EVT_INDEX_SPIS_RX] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for INFRA_EVT_SPIS_RX \n");
     }
-    else{
+    else
+    {
 #ifdef DUT
         dbg_printf(DBG_LESS_INFO, "re-register SPIS callback for DUT test \n");
-        //re-register SPIS callback for DUT test
+        // re-register SPIS callback for DUT test
         hx_event_set_callback(g_event[EVT_INDEX_SPIS_RX], evt_spiscomm_rx_cb_swtich_cb);
-        hx_event_set_priority(g_event[EVT_INDEX_SPIS_RX], 0);      //EVT_PRIORITY_HIGHEST
+        hx_event_set_priority(g_event[EVT_INDEX_SPIS_RX], 0); // EVT_PRIORITY_HIGHEST
 #else
         hx_event_set_callback(g_event[EVT_INDEX_SPIS_RX], evt_spiscomm_rx_cb);
         hx_event_set_priority(g_event[EVT_INDEX_SPIS_RX], EVT_PRIORITY_HIGHEST);
@@ -586,10 +677,12 @@ void event_handler_init(void)
 
     // Create and register callback for AUDIO_RX
     hx_event_create(&g_event[EVT_INDEX_AUDIO_RX]);
-    if(g_event[EVT_INDEX_AUDIO_RX] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for INFRA_EVT_AUDIO_RX\n");
+    if (g_event[EVT_INDEX_AUDIO_RX] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for INFRA_EVT_AUDIO_RX\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_AUDIO_RX], evt_audio_rx_cb);
         hx_event_set_priority(g_event[EVT_INDEX_AUDIO_RX], EVT_PRIORITY_HIGHEST);
     }
@@ -600,10 +693,12 @@ void event_handler_init(void)
 
     // Create and register callback for ISP_RX
     hx_event_create(&g_event[EVT_INDEX_ISP_RX]);
-    if(g_event[EVT_INDEX_ISP_RX] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for INFRA_EVT_ISP_RX\n");
+    if (g_event[EVT_INDEX_ISP_RX] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for INFRA_EVT_ISP_RX\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_ISP_RX], evt_ispcomm_rx_cb);
         hx_event_set_priority(g_event[EVT_INDEX_ISP_RX], EVT_PRIORITY_HIGHEST);
     }
@@ -614,10 +709,12 @@ void event_handler_init(void)
 
     // Create and register callback for UART_RX
     hx_event_create(&g_event[EVT_INDEX_UART_RX]);
-    if(g_event[EVT_INDEX_UART_RX] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for INFRA_EVT_UART_RX \n");
+    if (g_event[EVT_INDEX_UART_RX] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for INFRA_EVT_UART_RX \n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_UART_RX], evt_uartcomm_rx_cb);
         hx_event_set_priority(g_event[EVT_INDEX_UART_RX], EVT_PRIORITY_HIGHEST);
     }
@@ -627,8 +724,9 @@ void event_handler_init(void)
     evt_cm55stimer_init();
 
     hx_event_create(&g_event[EVT_INDEX_CM55STIMER]);
-    if(g_event[EVT_INDEX_CM55STIMER] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_CM55STIMER \n");
+    if (g_event[EVT_INDEX_CM55STIMER] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_CM55STIMER \n");
     }
     else
     {
@@ -641,8 +739,9 @@ void event_handler_init(void)
     evt_cm55mtimer_init();
 
     hx_event_create(&g_event[EVT_INDEX_CM55MTIMER]);
-    if(g_event[EVT_INDEX_CM55MTIMER] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_CM55MTIMER \n");
+    if (g_event[EVT_INDEX_CM55MTIMER] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_CM55MTIMER \n");
     }
     else
     {
@@ -655,8 +754,9 @@ void event_handler_init(void)
     evt_cm55mmb_init();
 
     hx_event_create(&g_event[EVT_INDEX_CM55MMB]);
-    if(g_event[EVT_INDEX_CM55MMB] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_CM55MMB \n");
+    if (g_event[EVT_INDEX_CM55MMB] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_CM55MMB \n");
     }
     else
     {
@@ -669,8 +769,9 @@ void event_handler_init(void)
     evt_cm55mmb_nbapp_init();
 
     hx_event_create(&g_event[EVT_INDEX_CM55MMB_PREROLL]);
-    if(g_event[EVT_INDEX_CM55MMB_PREROLL] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_CM55MMB_PREROLL \n");
+    if (g_event[EVT_INDEX_CM55MMB_PREROLL] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_CM55MMB_PREROLL \n");
     }
     else
     {
@@ -679,8 +780,9 @@ void event_handler_init(void)
     }
 
     hx_event_create(&g_event[EVT_INDEX_CM55MMB_STOP_PREROLL]);
-    if(g_event[EVT_INDEX_CM55MMB_STOP_PREROLL] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_CM55MMB_STOP_PREROLL \n");
+    if (g_event[EVT_INDEX_CM55MMB_STOP_PREROLL] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_CM55MMB_STOP_PREROLL \n");
     }
     else
     {
@@ -689,8 +791,9 @@ void event_handler_init(void)
     }
 
     hx_event_create(&g_event[EVT_INDEX_CM55MMB_ALLON_VID]);
-    if(g_event[EVT_INDEX_CM55MMB_ALLON_VID] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_CM55MMB_ALLON_VID \n");
+    if (g_event[EVT_INDEX_CM55MMB_ALLON_VID] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_CM55MMB_ALLON_VID \n");
     }
     else
     {
@@ -699,8 +802,9 @@ void event_handler_init(void)
     }
 
     hx_event_create(&g_event[EVT_INDEX_CM55MMB_STOP_ALLON_VID]);
-    if(g_event[EVT_INDEX_CM55MMB_STOP_ALLON_VID] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_CM55MMB_STOP_ALLON_VID \n");
+    if (g_event[EVT_INDEX_CM55MMB_STOP_ALLON_VID] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_CM55MMB_STOP_ALLON_VID \n");
     }
     else
     {
@@ -709,8 +813,9 @@ void event_handler_init(void)
     }
 
     hx_event_create(&g_event[EVT_INDEX_CM55MMB_CM55S_RDY]);
-    if(g_event[EVT_INDEX_CM55MMB_CM55S_RDY] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_CM55MMB_CM55S_RDY \n");
+    if (g_event[EVT_INDEX_CM55MMB_CM55S_RDY] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_CM55MMB_CM55S_RDY \n");
     }
     else
     {
@@ -719,8 +824,9 @@ void event_handler_init(void)
     }
 
     hx_event_create(&g_event[EVT_INDEX_CM55MMB_SPION]);
-    if(g_event[EVT_INDEX_CM55MMB_SPION] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_CM55MMB_SPION \n");
+    if (g_event[EVT_INDEX_CM55MMB_SPION] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_CM55MMB_SPION \n");
     }
     else
     {
@@ -729,8 +835,9 @@ void event_handler_init(void)
     }
 
     hx_event_create(&g_event[EVT_INDEX_CM55MMB_SPIOFF]);
-    if(g_event[EVT_INDEX_CM55MMB_SPIOFF] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_CM55MMB_SPIOFF \n");
+    if (g_event[EVT_INDEX_CM55MMB_SPIOFF] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_CM55MMB_SPIOFF \n");
     }
     else
     {
@@ -741,76 +848,104 @@ void event_handler_init(void)
 
     // Create and register callback for PILBOI
     hx_event_create(&g_event[EVT_INDEX_PILBOI_BTN_DOWN]);
-    if(g_event[EVT_INDEX_PILBOI_BTN_DOWN] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_PILBOI_BTN_DOWN\n");
+    if (g_event[EVT_INDEX_PILBOI_BTN_DOWN] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_PILBOI_BTN_DOWN\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_PILBOI_BTN_DOWN], evt_Pilboi_BtnDown_cb);
         hx_event_set_priority(g_event[EVT_INDEX_PILBOI_BTN_DOWN], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_INDEX_PILBOI_BTN_UP]);
-    if(g_event[EVT_INDEX_PILBOI_BTN_UP] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_INDEX_PILBOI_BTN_UP\n");
+    if (g_event[EVT_INDEX_PILBOI_BTN_UP] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_PILBOI_BTN_UP\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_INDEX_PILBOI_BTN_UP], evt_Pilboi_BtnUp_cb);
         hx_event_set_priority(g_event[EVT_INDEX_PILBOI_BTN_UP], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_PILBOI_NEXT]);
-    if(g_event[EVT_PILBOI_NEXT] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_PILBOI_NEXT\n");
+    if (g_event[EVT_PILBOI_NEXT] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_PILBOI_NEXT\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_PILBOI_NEXT], evt_Pilboi_Next_cb);
         hx_event_set_priority(g_event[EVT_PILBOI_NEXT], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_PILBOI_OD_DONE]);
-    if(g_event[EVT_PILBOI_OD_DONE] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_PILBOI_OD_DONE\n");
+    if (g_event[EVT_PILBOI_OD_DONE] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_PILBOI_OD_DONE\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_PILBOI_OD_DONE], evt_Pilboi_OdDone_cb);
         hx_event_set_priority(g_event[EVT_PILBOI_OD_DONE], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_PILBOI_PILL_NOT_FOV]);
-    if(g_event[EVT_PILBOI_PILL_NOT_FOV] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_PILBOI_PILL_NOT_FOV\n");
+    if (g_event[EVT_PILBOI_PILL_NOT_FOV] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_PILBOI_PILL_NOT_FOV\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_PILBOI_PILL_NOT_FOV], evt_Pilboi_PillNotFov_cb);
         hx_event_set_priority(g_event[EVT_PILBOI_PILL_NOT_FOV], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_PILBOI_PILL_FOV]);
-    if(g_event[EVT_PILBOI_PILL_FOV] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_PILBOI_PILL_FOV\n");
+    if (g_event[EVT_PILBOI_PILL_FOV] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_PILBOI_PILL_FOV\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_PILBOI_PILL_FOV], evt_Pilboi_PillFov_cb);
         hx_event_set_priority(g_event[EVT_PILBOI_PILL_FOV], EVT_PRIORITY_HIGHEST);
     }
-    
+
     hx_event_create(&g_event[EVT_PILBOI_PILL_NOT_ID]);
-    if(g_event[EVT_PILBOI_PILL_NOT_ID] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_PILBOI_PILL_NOT_ID\n");
+    if (g_event[EVT_PILBOI_PILL_NOT_ID] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_PILBOI_PILL_NOT_ID\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_PILBOI_PILL_NOT_ID], evt_Pilboi_PillNotId_cb);
         hx_event_set_priority(g_event[EVT_PILBOI_PILL_NOT_ID], EVT_PRIORITY_HIGHEST);
     }
 
     hx_event_create(&g_event[EVT_PILBOI_PILL_ID]);
-    if(g_event[EVT_PILBOI_PILL_ID] == EVT_INDEX_MAX){
-        dbg_printf(DBG_LESS_INFO,"Fail to allocate event for EVT_PILBOI_PILL_ID\n");
+    if (g_event[EVT_PILBOI_PILL_ID] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_PILBOI_PILL_ID\n");
     }
-    else{
+    else
+    {
         hx_event_set_callback(g_event[EVT_PILBOI_PILL_ID], evt_Pilboi_PillId_cb);
         hx_event_set_priority(g_event[EVT_PILBOI_PILL_ID], EVT_PRIORITY_HIGHEST);
     }
+
+    hx_event_create(&g_event[EVT_PILBOI_PILL_CENTER]);
+    if (g_event[EVT_PILBOI_PILL_CENTER] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_PILBOI_PILL_CENTER\n");
+    }
+    else
+    {
+        hx_event_set_callback(g_event[EVT_PILBOI_PILL_CENTER], evt_Pilboi_PillCenter_cb);
+        hx_event_set_priority(g_event[EVT_PILBOI_PILL_CENTER], EVT_PRIORITY_HIGHEST);
+    }
+
     /*
      * if enable WFI must disable systick
      */
@@ -821,11 +956,10 @@ void event_handler_init(void)
     // Override Idle event callback function
     hx_event_set_idlecb(idle);
 
-    dbg_printf(DBG_MORE_INFO,"Event loop init done \n");
+    dbg_printf(DBG_MORE_INFO, "Event loop init done \n");
 
     return;
 }
-
 
 // Function used to de-initialize event handler
 void event_handler_deinit(void)
@@ -835,12 +969,11 @@ void event_handler_deinit(void)
     return;
 }
 
-
 // Function used to start the event handler process
 void event_handler_start(void)
 {
 
-    dbg_printf(DBG_MORE_INFO,"Event loop start \n");
+    dbg_printf(DBG_MORE_INFO, "Event loop start \n");
 
     hx_eventloop_start();
     return;
@@ -853,24 +986,18 @@ void event_handler_stop(void)
     return;
 }
 
-
-
 // Callback function for idle event
 static void idle(void)
 {
     //_sleep(0);
-//    dbg_printf(DBG_MORE_INFO, "Idle now can do low priority task\n");
-//    hx_drv_timer_cm55x_delay_ms(300, TIMER_STATE_DC);
+    //    dbg_printf(DBG_MORE_INFO, "Idle now can do low priority task\n");
+    //    hx_drv_timer_cm55x_delay_ms(300, TIMER_STATE_DC);
     //    uint8_t input = console_getchar();
     //    xprintf("Input %d\n", input);
 
-//	__disable_irq(); //disable cpu all irq
-//	dbg_printf(DBG_MORE_INFO,"Enter WFI \n");
-//	__WFI();
-//	dbg_printf(DBG_MORE_INFO,"leave WFI \n");
-//	__enable_irq(); //disable cpu all irq
+    //	__disable_irq(); //disable cpu all irq
+    //	dbg_printf(DBG_MORE_INFO,"Enter WFI \n");
+    //	__WFI();
+    //	dbg_printf(DBG_MORE_INFO,"leave WFI \n");
+    //	__enable_irq(); //disable cpu all irq
 }
-
-
-
-
