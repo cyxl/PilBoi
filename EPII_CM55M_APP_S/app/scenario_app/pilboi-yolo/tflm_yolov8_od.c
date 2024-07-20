@@ -147,7 +147,7 @@ void move_platform(float degs)
 void process_pill_center()
 {
 	float degs = calc_deg(g_centroid.x, g_centroid.y);
-	xprintf("Center Degs %d \n",degs * 100);
+	xprintf("Center Degs %d \n", degs * 100);
 	step_some_deg(g_step_idx, YZ_MOTOR_ID, true, degs);
 }
 
@@ -798,8 +798,16 @@ static void dp_app_cv_yolov8n_ob_eventhdl_cb(EVT_INDEX_E event)
 		break;
 	case EVT_PILBOI_PILL_FOV:
 		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_PILL_FOV\r\n");
-		g_state = CENTERING; 
+		g_state = CENTERING;
 		process_pill_center();
+		break;
+	case EVT_PILBOI_BAD_PILL:
+		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_BAD_PILL\r\n");
+		// TODO
+		break;
+	case EVT_PILBOI_GOOD_PILL:
+		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_GOOD_PILL\r\n");
+		// TODO
 		break;
 
 	default:

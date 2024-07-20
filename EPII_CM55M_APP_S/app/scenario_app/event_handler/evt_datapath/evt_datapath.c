@@ -1020,6 +1020,36 @@ uint8_t evt_Pilboi_PillCenter_cb(void)
 	return HX_EVENT_RETURN_DONE;
 }
 
+uint8_t evt_Pilboi_GoodPill_cb(void)
+{
+	if (g_event_cb != NULL)
+	{
+		g_event_cb(EVT_PILBOI_GOOD_PILL);
+	}
+	else
+	{
+#ifndef __GNU__
+		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_GOOD_PILL g_event_cb == NULL\n");
+#endif
+	}
+	return HX_EVENT_RETURN_DONE;
+}
+
+uint8_t evt_Pilboi_BadPill_cb(void)
+{
+	if (g_event_cb != NULL)
+	{
+		g_event_cb(EVT_PILBOI_BAD_PILL);
+	}
+	else
+	{
+#ifndef __GNU__
+		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_BAD_PILL g_event_cb == NULL\n");
+#endif
+	}
+	return HX_EVENT_RETURN_DONE;
+}
+
 #if 0
 /**
  * \brief	Callback function for PGPIO0 Interrupt

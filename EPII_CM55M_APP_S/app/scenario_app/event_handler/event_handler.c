@@ -946,6 +946,28 @@ void event_handler_init(void)
         hx_event_set_priority(g_event[EVT_PILBOI_PILL_CENTER], EVT_PRIORITY_HIGHEST);
     }
 
+    hx_event_create(&g_event[EVT_PILBOI_BAD_PILL]);
+    if (g_event[EVT_PILBOI_BAD_PILL] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_PILBOI_BAD_PILL\n");
+    }
+    else
+    {
+        hx_event_set_callback(g_event[EVT_PILBOI_BAD_PILL], evt_Pilboi_BadPill_cb);
+        hx_event_set_priority(g_event[EVT_PILBOI_BAD_PILL], EVT_PRIORITY_HIGHEST);
+    }
+
+    hx_event_create(&g_event[EVT_PILBOI_GOOD_PILL]);
+    if (g_event[EVT_PILBOI_GOOD_PILL] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_PILBOI_GOOD_PILL\n");
+    }
+    else
+    {
+        hx_event_set_callback(g_event[EVT_PILBOI_GOOD_PILL], evt_Pilboi_GoodPill_cb);
+        hx_event_set_priority(g_event[EVT_PILBOI_GOOD_PILL], EVT_PRIORITY_HIGHEST);
+    }
+
     /*
      * if enable WFI must disable systick
      */

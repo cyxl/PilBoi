@@ -189,6 +189,9 @@ uint8_t evt_Pilboi_PillFov_cb(void);
 uint8_t evt_Pilboi_PillNotId_cb(void);
 uint8_t evt_Pilboi_PillId_cb(void);
 uint8_t evt_Pilboi_PillCenter_cb(void);
+uint8_t evt_Pilboi_BadPill_cb(void);
+uint8_t evt_Pilboi_GoodPill_cb(void);
+
 #if 0
 /**
  * \brief	Callback function for PGPIO0 Interrupt
