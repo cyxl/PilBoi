@@ -79,6 +79,7 @@
 
 #define TOTAL_STEP_TICK 1
 #define TOTAL_STEP_TICK_DBG_LOG 0
+#define CAMCENTERX 128
 
 #if TOTAL_STEP_TICK
 #define CPU_CLK 0xffffff + 1
@@ -136,11 +137,11 @@ uint8_t g_consec_pos = 0;
 
 void print_bb(x, y, w, h)
 {
-	xprintf("(%d,%d)(%d,%d)\n", 
-	(int)x - (w/2), 
-	(int)y - (h/2), 
-	(int)x + (w/2), 
-	(int)y + (h/2));
+	xprintf("(%d,%d)(%d,%d)\n",
+			(int)x - (w / 2),
+			(int)y - (h / 2),
+			(int)x + (w / 2),
+			(int)y + (h / 2));
 }
 
 void move_platform(float degs)
@@ -150,9 +151,14 @@ void move_platform(float degs)
 
 void process_pill_center()
 {
+	bool isPillRight = true;
+	if (g_centroid.x < CAMCENTERX)
+	{
+		isPillRight = false;
+	}
 	float degs = calc_deg(g_centroid.x, g_centroid.y);
 	xprintf("Center Degs %d \n", degs * 100);
-	step_some_deg(g_step_idx, YZ_MOTOR_ID, true, degs);
+	step_some_deg(g_step_idx, YZ_MOTOR_ID, isPillRight, degs);
 }
 
 void process_od_results_fov(struct_yolov8_ob_algoResult *algo, uint8_t num)
