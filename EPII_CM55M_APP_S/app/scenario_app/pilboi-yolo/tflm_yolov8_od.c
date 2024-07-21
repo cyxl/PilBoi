@@ -136,7 +136,11 @@ uint8_t g_consec_pos = 0;
 
 void print_bb(x, y, w, h)
 {
-	xprintf("(%d,%d)(%d,%d)\n", (int)x, (int)y, (int)x + w, (int)y + h);
+	xprintf("(%d,%d)(%d,%d)\n", 
+	(int)x - (w/2), 
+	(int)y - (h/2), 
+	(int)x + (w/2), 
+	(int)y + (h/2));
 }
 
 void move_platform(float degs)
@@ -187,8 +191,8 @@ void process_od_results_fov(struct_yolov8_ob_algoResult *algo, uint8_t num)
 	if (max_conf > PILBOI_FOV_CONF && g_consec_pos >= PILBOI_CONSEC_POS)
 	{
 		printf("FOV!! %d\n", max_conf * 100.);
-		g_centroid.x = algo->obr[max_idx].bbox.x + (algo->obr[max_idx].bbox.width / 2);
-		g_centroid.y = algo->obr[max_idx].bbox.y + (algo->obr[max_idx].bbox.height / 2);
+		g_centroid.x = algo->obr[max_idx].bbox.x;
+		g_centroid.y = algo->obr[max_idx].bbox.y;
 
 		evt_Pilboi_PillFov_cb();
 	}

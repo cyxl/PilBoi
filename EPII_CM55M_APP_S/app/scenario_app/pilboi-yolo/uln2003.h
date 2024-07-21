@@ -52,7 +52,7 @@ extern "C"
     uint8_t step_some(uint8_t step_idx, int motor_id, uint8_t clockwise, int num);
     uint8_t step_some_deg(uint8_t step_idx, int motor_id, uint8_t clockwise, float degrees);
     float distanceformula(int x1, int y1, int x2, int y2);
-    float calc_deg(uint8_t pillX, uint8_t pillY);
+    float calc_deg(int16_t pillX, int16_t pillY);
 
 #ifdef __cplusplus
 }

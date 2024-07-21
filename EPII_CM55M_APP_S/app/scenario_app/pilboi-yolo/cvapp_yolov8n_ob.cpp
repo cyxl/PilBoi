@@ -213,7 +213,7 @@ int cv_yolov8n_ob_init(bool security_enable, bool privilege_enable, uint32_t mod
 	return ercode;
 }
 
-#define INDEX_X 1
+#define INDEX_X 0
 #define INDEX_Y 1
 #define INDEX_W 2
 #define INDEX_H 3
@@ -244,6 +244,7 @@ static void yolov8_ob_post_processing(tflite::MicroInterpreter *static_interpret
 	auto num_record{output->dims->data[1]};
 	auto num_element{output->dims->data[2]};
 	auto num_class{static_cast<uint8_t>(num_element - 5)};
+	xprintf("Tensor width %d height %d num classes %d\n",width,height,num_class);
 
 	float score_threshold{modelScoreThreshold};
 	float iou_threshold{modelNMSThreshold};

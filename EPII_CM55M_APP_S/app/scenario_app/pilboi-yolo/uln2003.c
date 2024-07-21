@@ -135,18 +135,21 @@ float distanceformula(int x1, int y1, int x2, int y2)
     return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
 }
 
-float calc_deg(uint8_t pillX, uint8_t pillY)
+float calc_deg(int16_t pillX, int16_t pillY)
 {
     float pilltoorigin = distanceformula(pillX, pillY, PIVOTORIGINX, PIVOTORIGINY);
     float pilltocenter = distanceformula(pillX, pillY, CAMCENTERX, CAMCENTERY);
-    float origintocenter = distanceformula(PIVOTORIGINX, CAMCENTERX, PIVOTORIGINY, CAMCENTERY);
-    float origindeg = acos((pow(pilltocenter, 2) - pow(origintocenter, 2) + pow(pilltoorigin, 2)) / (-2 * origintocenter * pilltoorigin));
+    float origintocenter = distanceformula(PIVOTORIGINX, PIVOTORIGINY, CAMCENTERX,CAMCENTERY);
+    float f = (pow(origintocenter, 2) - pow(pilltocenter, 2) + pow(pilltoorigin, 2)) / (2. * origintocenter * pilltoorigin);
+    float origindeg = acos(f);
     // float origindeg = acos(pow(origintocenter, 2) + pow(pilltocenter, 2) - pow(pilltoorigin, 2) / 2 * origintocenter * pilltocenter);
-    origindeg = rads_to_degs(origindeg);
-    xprintf("dist %d %d %d\n", pilltoorigin, pilltocenter, origintocenter);
+    xprintf("dist");
     printfloat(pilltoorigin);
     printfloat(pilltocenter);
     printfloat(origintocenter);
+    printfloat(f);
+    printfloat(origindeg);
+    origindeg = rads_to_degs(origindeg);
     printfloat(origindeg);
 
     return origindeg;
