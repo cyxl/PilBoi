@@ -813,11 +813,11 @@ static void dp_app_cv_yolov8n_ob_eventhdl_cb(EVT_INDEX_E event)
 		break;
 	case EVT_PILBOI_BAD_PILL:
 		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_BAD_PILL\r\n");
-		// TODO
+		step_some_deg(g_step_idx, YZ_MOTOR_ID, true, 180.);
 		break;
 	case EVT_PILBOI_GOOD_PILL:
 		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_GOOD_PILL\r\n");
-		// TODO
+		step_some_deg(g_step_idx, YZ_MOTOR_ID, false, 180.);
 		break;
 
 	default:
