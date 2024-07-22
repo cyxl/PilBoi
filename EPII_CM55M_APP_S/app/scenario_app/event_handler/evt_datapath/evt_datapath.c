@@ -934,6 +934,36 @@ uint8_t evt_Pilboi_Next_cb(void)
 	return HX_EVENT_RETURN_DONE;
 }
 
+uint8_t evt_Pilboi_Search_cb(void)
+{
+	if (g_event_cb != NULL)
+	{
+		g_event_cb(EVT_PILBOI_SEARCH);
+	}
+	else
+	{
+#ifndef __GNU__
+		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_SEARCH g_event_cb == NULL\n");
+#endif
+	}
+	return HX_EVENT_RETURN_DONE;
+}
+
+uint8_t evt_Pilboi_Centered_cb(void)
+{
+	if (g_event_cb != NULL)
+	{
+		g_event_cb(EVT_PILBOI_CENTERED);
+	}
+	else
+	{
+#ifndef __GNU__
+		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_CENTERED g_event_cb == NULL\n");
+#endif
+	}
+	return HX_EVENT_RETURN_DONE;
+}
+
 uint8_t evt_Pilboi_OdDone_cb(void)
 {
 	if (g_event_cb != NULL)
@@ -1843,4 +1873,5 @@ void hx_ADCRTC_evthdl_register_cb(uint32_t rtc_interval, evthdlADCRTC_CBEvent_t 
 		g_ADCRTC_event_cb = cb_event;
 	}
 }
+
 #endif

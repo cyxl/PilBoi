@@ -858,6 +858,29 @@ void event_handler_init(void)
         hx_event_set_priority(g_event[EVT_INDEX_PILBOI_BTN_DOWN], EVT_PRIORITY_HIGHEST);
     }
 
+    hx_event_create(&g_event[EVT_PILBOI_SEARCH]);
+    if (g_event[EVT_PILBOI_SEARCH] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INDEX_PILBOI_SEARCh\n");
+    }
+    else
+    {
+        hx_event_set_callback(g_event[EVT_PILBOI_SEARCH], evt_Pilboi_Search_cb);
+        hx_event_set_priority(g_event[EVT_PILBOI_SEARCH], EVT_PRIORITY_HIGHEST);
+    }
+
+    hx_event_create(&g_event[EVT_PILBOI_CENTERED]);
+    if (g_event[EVT_PILBOI_CENTERED] == EVT_INDEX_MAX)
+    {
+        dbg_printf(DBG_LESS_INFO, "Fail to allocate event for EVT_INEVT_PILBOI_CENTERED\n");
+    }
+    else
+    {
+        hx_event_set_callback(g_event[EVT_PILBOI_CENTERED], evt_Pilboi_Centered_cb);
+        hx_event_set_priority(g_event[EVT_PILBOI_CENTERED], EVT_PRIORITY_HIGHEST);
+    }
+
+
     hx_event_create(&g_event[EVT_INDEX_PILBOI_BTN_UP]);
     if (g_event[EVT_INDEX_PILBOI_BTN_UP] == EVT_INDEX_MAX)
     {

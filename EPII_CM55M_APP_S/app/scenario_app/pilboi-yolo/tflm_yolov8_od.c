@@ -90,6 +90,8 @@
 enum PILBOI_STATES
 {
 	INIT = 0,
+	DISPENSING,
+	SEARCHING,
 	FOV,
 	CENTERING,
 	IDING,
@@ -101,7 +103,12 @@ struct pilboi_centroid
 	uint16_t y;
 };
 
+#define NUM_IDS 5
 static struct pilboi_centroid g_centroid;
+static float g_class_conf;
+static uint8_t g_class_id;
+static uint8_t g_inf_ids[NUM_IDS];
+static uint8_t g_pill_id_cnt = 0;
 static uint8_t g_xdma_abnormal,
 	g_md_detect, g_cdm_fifoerror, g_wdt1_timeout, g_wdt2_timeout, g_wdt3_timeout;
 static uint8_t g_hxautoi2c_error, g_inp1bitparer_abnormal;
@@ -122,10 +129,11 @@ struct_yolov8_ob_algoResult algoresult_yolofastest_ob;
 struct_yolov8_pose_algoResult algoresult_yolov8_pose;
 uint8_t g_num_res = 0;
 int8_t g_fov_max_box_idx = 0;
-enum PILBOI_STATES g_state = FOV;
+enum PILBOI_STATES g_state = INIT;
 static uint32_t g_trans_type;
 static uint32_t judge_case_data;
-static uint8_t g_step_idx = 0;
+static uint8_t g_table_step_idx = 0;
+static uint8_t g_wheel_step_idx = 0;
 void app_start_state(APP_STATE_E state);
 void model_change(void);
 void pinmux_init();
@@ -146,7 +154,7 @@ void print_bb(x, y, w, h)
 
 void move_platform(float degs)
 {
-	g_step_idx = step_some_deg(g_step_idx, YZ_MOTOR_ID, false, degs);
+	g_table_step_idx = step_some_deg(g_table_step_idx, TABLE_MOTOR_ID, true, degs);
 }
 
 void process_pill_center()
@@ -158,7 +166,49 @@ void process_pill_center()
 	}
 	float degs = calc_deg(g_centroid.x, g_centroid.y);
 	xprintf("Center Degs %d \n", degs * 100);
-	step_some_deg(g_step_idx, YZ_MOTOR_ID, isPillRight, degs);
+	step_some_deg(g_table_step_idx, TABLE_MOTOR_ID, isPillRight, degs);
+}
+
+uint8_t get_best_id(){
+	//TODO make 8 NUM_CLASSES
+	static int cnts[8];
+	int max_cnt;
+	int max_idx;
+	bzero(cnts,sizeof(cnts));
+
+	for (int i=0;i<g_pill_id_cnt;i++){
+		cnts[g_inf_ids[i]]++;
+		xprintf("cnting  %d \n",g_inf_ids[i]);
+	}
+
+	for (int i=0;i<8;i++){
+		if (cnts[i] > max_cnt){
+		    xprintf("cnting  %d cnts %d\n",i,cnts[i]);
+			max_cnt = cnts[i];
+			max_idx = i;
+		}
+	}
+	return max_idx;
+
+}
+void process_pill_id()
+{
+	g_inf_ids[g_pill_id_cnt++]=g_class_id;
+
+	if (g_pill_id_cnt > NUM_IDS)
+	{
+		uint8_t max_class_id = get_best_id();
+		xprintf("Pill id %d\n",max_class_id);
+
+		if (g_class_id == 7)
+			evt_Pilboi_GoodPill_cb();
+		else
+			evt_Pilboi_BadPill_cb();
+	}
+	else
+	{
+		evt_Pilboi_Centered_cb();
+	}
 }
 
 void process_od_results_fov(struct_yolov8_ob_algoResult *algo, uint8_t num)
@@ -199,6 +249,8 @@ void process_od_results_fov(struct_yolov8_ob_algoResult *algo, uint8_t num)
 		printf("FOV!! %d\n", max_conf * 100.);
 		g_centroid.x = algo->obr[max_idx].bbox.x;
 		g_centroid.y = algo->obr[max_idx].bbox.y;
+		g_class_conf = algo->obr[max_idx].confidence;
+		g_class_id = algo->obr[max_idx].class_idx;
 
 		evt_Pilboi_PillFov_cb();
 	}
@@ -793,31 +845,50 @@ static void dp_app_cv_yolov8n_ob_eventhdl_cb(EVT_INDEX_E event)
 		break;
 	case EVT_PILBOI_NEXT:
 		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_NEXT\r\n");
+		g_state = DISPENSING;
+		step_some_deg(g_table_step_idx, WHEEL_MOTOR_ID, true, 45.);
+		evt_Pilboi_Search_cb();
+		g_state = SEARCHING;
+		g_pill_id_cnt = 0;
+		bzero(g_inf_ids,sizeof(g_inf_ids));
+		break;
+	case EVT_PILBOI_SEARCH:
+		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_SEARCH\r\n");
+		g_table_step_idx = step_some_deg(g_table_step_idx, TABLE_MOTOR_ID, false, 5.);
 		sensordplib_retrigger_capture();
 		break;
 	case EVT_PILBOI_OD_DONE:
 		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_OD_DONE\r\n");
-		if (g_state == FOV)
+		if (g_state == SEARCHING)
 			process_od_results_fov(&algoresult_yolov8n_ob, g_num_res);
+		else if (g_state == IDING)
+			process_pill_id();
+		else
+			evt_Pilboi_Next_cb();
 		break;
 	case EVT_PILBOI_PILL_NOT_FOV:
 		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_NOT_FOV\r\n");
-		if (g_state == FOV)
-			move_platform(3.);
-		evt_Pilboi_Next_cb();
+		evt_Pilboi_Search_cb();
 		break;
 	case EVT_PILBOI_PILL_FOV:
 		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_PILL_FOV\r\n");
 		g_state = CENTERING;
 		process_pill_center();
+		evt_Pilboi_Centered_cb();
+		break;
+	case EVT_PILBOI_CENTERED:
+		g_state = IDING;
+		sensordplib_retrigger_capture();
 		break;
 	case EVT_PILBOI_BAD_PILL:
 		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_BAD_PILL\r\n");
-		step_some_deg(g_step_idx, YZ_MOTOR_ID, true, 180.);
+		step_some_deg(g_table_step_idx, TABLE_MOTOR_ID, true, 180.);
+		evt_Pilboi_Next_cb();
 		break;
 	case EVT_PILBOI_GOOD_PILL:
 		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_GOOD_PILL\r\n");
-		step_some_deg(g_step_idx, YZ_MOTOR_ID, false, 180.);
+		step_some_deg(g_table_step_idx, TABLE_MOTOR_ID, false, 180.);
+		evt_Pilboi_Next_cb();
 		break;
 
 	default:

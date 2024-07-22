@@ -4,8 +4,8 @@
 
 #define NUM_MOTOR_PINS 4
 #define STEP_SEQ_LEN 8
-#define XY_MOTOR_ID 0
-#define YZ_MOTOR_ID 1
+#define TABLE_MOTOR_ID 0
+#define WHEEL_MOTOR_ID 1
 
 #include <stdint.h>
 

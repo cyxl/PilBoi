@@ -11,25 +11,24 @@
 #define DEGS_TO_STEPS (4096. / 360.)
 #define STEPPER_DELAY 400
 #define PIVOTORIGINX 128
-#define PIVOTORIGINY 64
+#define PIVOTORIGINY 32
 #define CAMCENTERX 128
 #define CAMCENTERY 128
 
 float rads_to_degs(float X)
 {
-
     return X * 180. / 3.1415926;
 }
 
-GPIO_INDEX_E yz_motor_pins[NUM_MOTOR_PINS] = {GPIO13, GPIO14, GPIO15, GPIO0};
-GPIO_INDEX_E xy_motor_pins[NUM_MOTOR_PINS] = {GPIO1, GPIO2, SB_GPIO0, SB_GPIO1};
+GPIO_INDEX_E table_motor_pins[NUM_MOTOR_PINS] = {GPIO13, GPIO14, GPIO15, GPIO0};
+GPIO_INDEX_E wheel_motor_pins[NUM_MOTOR_PINS] = {GPIO1, GPIO2, SB_GPIO0, SB_GPIO1};
 
 GPIO_INDEX_E *get_pins(int motor_id)
 {
-    if (motor_id == XY_MOTOR_ID)
-        return xy_motor_pins;
-    if (motor_id == YZ_MOTOR_ID)
-        return yz_motor_pins;
+    if (motor_id == TABLE_MOTOR_ID)
+        return table_motor_pins;
+    if (motor_id == WHEEL_MOTOR_ID)
+        return wheel_motor_pins;
     return NULL;
 }
 
@@ -48,7 +47,7 @@ uint8_t step_clockwise(uint8_t step_idx, int motor_id)
 {
     GPIO_INDEX_E *pins = get_pins(motor_id);
 
-    uint8_t l_step_idx = (step_idx - 1) % STEP_SEQ_LEN;
+    uint8_t l_step_idx = (step_idx + 1) % STEP_SEQ_LEN;
     for (int i = 0; i < NUM_MOTOR_PINS; i++)
     {
         hx_drv_timer_cm55x_delay_us(STEPPER_DELAY, TIMER_STATE_DC);
@@ -61,7 +60,7 @@ uint8_t step_anticlockwise(uint8_t step_idx, int motor_id)
 {
     GPIO_INDEX_E *pins = get_pins(motor_id);
 
-    uint8_t l_step_idx = (step_idx + 1) % STEP_SEQ_LEN;
+    uint8_t l_step_idx = (step_idx - 1) % STEP_SEQ_LEN;
     for (int i = 0; i < NUM_MOTOR_PINS; i++)
     {
         hx_drv_timer_cm55x_delay_us(STEPPER_DELAY, TIMER_STATE_DC);
