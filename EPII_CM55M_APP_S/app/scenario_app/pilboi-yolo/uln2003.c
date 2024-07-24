@@ -9,7 +9,7 @@
 #include <math.h>
 #include <stdio.h>
 #define DEGS_TO_STEPS (4096. / 360.)
-#define STEPPER_DELAY 400
+#define STEPPER_DELAY 350
 #define PIVOTORIGINX 128
 #define PIVOTORIGINY 32
 #define CAMCENTERX 128

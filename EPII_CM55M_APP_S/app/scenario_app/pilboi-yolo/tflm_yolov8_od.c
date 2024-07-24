@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include "powermode_export.h"
 #include "uln2003.h"
+#include "pilboi_cfg.h"
 
 // #define WATCH_DOG_TIMEOUT_TH	(20000) //ms
 #define WATCH_DOG_TIMEOUT_TH (500) // ms
@@ -109,6 +110,7 @@ static float g_class_conf;
 static uint8_t g_class_id;
 static uint8_t g_inf_ids[NUM_IDS];
 static uint8_t g_pill_id_cnt = 0;
+static uint8_t g_search_cnt = 0;
 static uint8_t g_xdma_abnormal,
 	g_md_detect, g_cdm_fifoerror, g_wdt1_timeout, g_wdt2_timeout, g_wdt3_timeout;
 static uint8_t g_hxautoi2c_error, g_inp1bitparer_abnormal;
@@ -118,6 +120,9 @@ static uint32_t g_cur_jpegenc_frame;
 static uint8_t g_time;
 static uint8_t g_spi_master_initial_status;
 static uint32_t g_use_case;
+
+static int config_area_size = 0x1000;
+static int config_area_offset = 0x107400;
 /*volatile*/ uint32_t jpeg_addr, jpeg_sz;
 struct_algoResult algoresult;
 struct_fm_algoResult algoresult_fm;
@@ -134,6 +139,9 @@ static uint32_t g_trans_type;
 static uint32_t judge_case_data;
 static uint8_t g_table_step_idx = 0;
 static uint8_t g_wheel_step_idx = 0;
+static struct pilboi_config *g_pilboi_cfg = PILBOI_CONFIG_FLASH_ADDR;
+static uint8_t g_pilboi_pills_collected[8]; // TODO 8 -> NUM_CLASSES
+
 void app_start_state(APP_STATE_E state);
 void model_change(void);
 void pinmux_init();
@@ -169,41 +177,50 @@ void process_pill_center()
 	step_some_deg(g_table_step_idx, TABLE_MOTOR_ID, isPillRight, degs);
 }
 
-uint8_t get_best_id(){
-	//TODO make 8 NUM_CLASSES
+uint8_t get_best_id()
+{
+	// TODO make 8 NUM_CLASSES
 	static int cnts[8];
-	int max_cnt;
+	int max_cnt = 0;
 	int max_idx;
-	bzero(cnts,sizeof(cnts));
+	bzero(cnts, sizeof(cnts));
 
-	for (int i=0;i<g_pill_id_cnt;i++){
+	for (int i = 0; i < g_pill_id_cnt; i++)
+	{
 		cnts[g_inf_ids[i]]++;
-		xprintf("cnting  %d \n",g_inf_ids[i]);
+		xprintf("cnting  %d \n", g_inf_ids[i]);
 	}
 
-	for (int i=0;i<8;i++){
-		if (cnts[i] > max_cnt){
-		    xprintf("cnting  %d cnts %d\n",i,cnts[i]);
+	for (int i = 0; i < 8; i++)
+	{
+		if (cnts[i] > max_cnt)
+		{
+			xprintf("cnting  %d cnts %d\n", i, cnts[i]);
 			max_cnt = cnts[i];
 			max_idx = i;
 		}
 	}
 	return max_idx;
-
 }
 void process_pill_id()
 {
-	g_inf_ids[g_pill_id_cnt++]=g_class_id;
+	g_inf_ids[g_pill_id_cnt++] = g_class_id;
 
 	if (g_pill_id_cnt > NUM_IDS)
 	{
 		uint8_t max_class_id = get_best_id();
-		xprintf("Pill id %d\n",max_class_id);
+		xprintf("Pill id %d\n", max_class_id);
 
-		if (g_class_id == 7)
+		if (g_pilboi_cfg->cnt[max_class_id] > g_pilboi_pills_collected[max_class_id])
+		{
+			g_pilboi_pills_collected[max_class_id]++;
+			xprintf("Collecting pill id %d,  %d of %d\n", max_class_id, g_pilboi_pills_collected[max_class_id], g_pilboi_cfg[max_class_id]);
 			evt_Pilboi_GoodPill_cb();
+		}
 		else
+		{
 			evt_Pilboi_BadPill_cb();
+		}
 	}
 	else
 	{
@@ -850,12 +867,18 @@ static void dp_app_cv_yolov8n_ob_eventhdl_cb(EVT_INDEX_E event)
 		evt_Pilboi_Search_cb();
 		g_state = SEARCHING;
 		g_pill_id_cnt = 0;
-		bzero(g_inf_ids,sizeof(g_inf_ids));
+		g_search_cnt = 0;
+		bzero(g_inf_ids, sizeof(g_inf_ids));
 		break;
 	case EVT_PILBOI_SEARCH:
 		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_SEARCH\r\n");
+		g_search_cnt++;
 		g_table_step_idx = step_some_deg(g_table_step_idx, TABLE_MOTOR_ID, false, 5.);
 		sensordplib_retrigger_capture();
+		if (g_search_cnt >= 255)
+		{
+			evt_Pilboi_Next_cb();
+		}
 		break;
 	case EVT_PILBOI_OD_DONE:
 		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_OD_DONE\r\n");
@@ -882,12 +905,12 @@ static void dp_app_cv_yolov8n_ob_eventhdl_cb(EVT_INDEX_E event)
 		break;
 	case EVT_PILBOI_BAD_PILL:
 		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_BAD_PILL\r\n");
-		step_some_deg(g_table_step_idx, TABLE_MOTOR_ID, true, 180.);
+		step_some_deg(g_table_step_idx, TABLE_MOTOR_ID, false, 360.);
 		evt_Pilboi_Next_cb();
 		break;
 	case EVT_PILBOI_GOOD_PILL:
 		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_GOOD_PILL\r\n");
-		step_some_deg(g_table_step_idx, TABLE_MOTOR_ID, false, 180.);
+		step_some_deg(g_table_step_idx, TABLE_MOTOR_ID, true, 360.);
 		evt_Pilboi_Next_cb();
 		break;
 
@@ -1149,6 +1172,8 @@ int tflm_yolov8_od_app(void)
 
 	pinmux_init();
 
+	bzero(&g_pilboi_pills_collected, sizeof(g_pilboi_pills_collected));
+
 	// SCB_DisableICache();
 	// SCB_DisableDCache();
 	// cold boot
@@ -1217,7 +1242,12 @@ int tflm_yolov8_od_app(void)
 		xprintf("YOLOv8n object detection\n");
 #ifdef EN_ALGO
 		cv_yolov8n_ob_init(true, true, YOLOV8_OBJECT_DETECTION_FLASH_ADDR);
+
 		init_motors();
+
+		for (int i=0;i<8;i++){
+			xprintf("pilboi cfg %d:%d\n",i,g_pilboi_cfg->cnt[i]);
+		}
 
 #endif
 		app_start_state(APP_STATE_ALLON_YOLOV8N_OB);

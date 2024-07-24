@@ -24,7 +24,7 @@ LIB_SEL = pwrmgmt sensordp tflmtag2209_u55tag2205 spi_ptl spi_eeprom hxevent img
 # Add new middleware here
 # The source code should be loacted in ~\middleware\{mid_name}\
 ##
-MID_SEL =
+MID_SEL = 
 
 override OS_SEL:=
 override TRUSTZONE := y

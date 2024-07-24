@@ -82,6 +82,7 @@ namespace
 
 	constexpr int tensor_arena_size = 1053 * 1024;
 
+
 	static uint32_t tensor_arena = 0;
 
 	struct ethosu_driver ethosu_drv; /* Default Ethos-U device driver */
