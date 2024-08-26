@@ -1123,33 +1123,6 @@ void model_change()
 	}
 #endif
 	// hx_lib_spi_eeprom_enable_XIP(USE_DW_SPI_MST_Q, false, FLASH_QUAD, true);
-#if 0
-	//restart all thing in main
-	//check current use case
-	g_use_case = EPII_get_memory(0x5610F02c);
-
-
-	mm_set_initial(BOOT2NDLOADER_BASE, 0x00200000-(BOOT2NDLOADER_BASE-0x34000000));
-
-	if(g_use_case == 0) {
-		xprintf("Face Detection Face Land mark \n");
-		//cv_fd_fl_init(bool security_enable, bool privilege_enable, uint32_t fd_model_addr, uint32_t fl_model_addr, uint32_t el_model_addr);
-		cv_fd_fl_init(true, true, FACE_DECTECT_FLASH_ADDR, FACE_LANDMARK_FLASH_ADDR, EYE_LANDMARK_FLASH_ADDR);
-		app_start_state(APP_STATE_ALLON_FD_FL);
-	}
-	else if(g_use_case == 1) {
-		//pose landmark with movenet
-		xprintf("pose landmark with movenet\n");
-		cv_pl_init(true, true, HUMAN_DETECTION_FLASH_ADDR, POSE_LANDMARKS_MOVENET_FLASH_ADDR);
-		app_start_state(APP_STATE_ALLON_PL);
-	}
-	else if(g_use_case == 2) {
-		//pose landmark with hrnet
-		xprintf("pose landmark with hrnet\n");
-		cv_pl_init(true, true, HUMAN_DETECTION_FLASH_ADDR, POSE_LANDMARKS_HRNET_FLASH_ADDR);
-		app_start_state(APP_STATE_ALLON_PL);
-	}
-#endif
 }
 /*******************************************************************************
  * Code

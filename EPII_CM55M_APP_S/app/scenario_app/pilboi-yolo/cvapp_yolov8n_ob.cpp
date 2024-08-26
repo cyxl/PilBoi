@@ -37,7 +37,7 @@
 #include "memory_manage.h"
 extern "C"
 {
-  #include "pilboi_utils.h"
+#include "pilboi_utils.h"
 }
 #include <send_result.h>
 
@@ -45,15 +45,9 @@ extern "C"
 
 #define INPUT_IMAGE_CHANNELS 3
 
-#if 1
 #define YOLOV8_OB_INPUT_TENSOR_WIDTH 256
 #define YOLOV8_OB_INPUT_TENSOR_HEIGHT 256
 #define YOLOV8_OB_INPUT_TENSOR_CHANNEL INPUT_IMAGE_CHANNELS
-#else
-#define YOLOV8_OB_INPUT_TENSOR_WIDTH 224
-#define YOLOV8_OB_INPUT_TENSOR_HEIGHT 224
-#define YOLOV8_OB_INPUT_TENSOR_CHANNEL INPUT_IMAGE_CHANNELS
-#endif
 
 #define YOLOV8N_OB_DBG_APP_LOG 1
 
@@ -74,17 +68,13 @@ static uint32_t capture_image_tick = 0;
 #endif
 #endif
 
-
 using namespace std;
 
 namespace
 {
 
 	constexpr int tensor_arena_size = 1053 * 1024;
-
-
 	static uint32_t tensor_arena = 0;
-
 	struct ethosu_driver ethosu_drv; /* Default Ethos-U device driver */
 	tflite::MicroInterpreter *yolov8n_ob_int_ptr = nullptr;
 	TfLiteTensor *yolov8n_ob_input, *yolov8n_ob_output, *yolov8n_ob_output2;
@@ -220,9 +210,9 @@ int cv_yolov8n_ob_init(bool security_enable, bool privilege_enable, uint32_t mod
 #define INDEX_H 3
 #define INDEX_S 4
 #define INDEX_T 5
-#define EL_CLIP(x, a, b)           ((x) < (a) ? (a) : ((x) > (b) ? (b) : (x)))
+#define EL_CLIP(x, a, b) ((x) < (a) ? (a) : ((x) > (b) ? (b) : (x)))
 
-static void yolov8_ob_post_processing(tflite::MicroInterpreter *static_interpreter, float modelScoreThreshold, float modelNMSThreshold, struct_yolov8_ob_algoResult *alg,uint8_t* num)
+static void yolov8_ob_post_processing(tflite::MicroInterpreter *static_interpreter, float modelScoreThreshold, float modelNMSThreshold, struct_yolov8_ob_algoResult *alg, uint8_t *num)
 {
 	uint32_t img_w = app_get_raw_width();
 	uint32_t img_h = app_get_raw_height();
@@ -245,7 +235,7 @@ static void yolov8_ob_post_processing(tflite::MicroInterpreter *static_interpret
 	auto num_record{output->dims->data[1]};
 	auto num_element{output->dims->data[2]};
 	auto num_class{static_cast<uint8_t>(num_element - 5)};
-	xprintf("Tensor width %d height %d num classes %d\n",width,height,num_class);
+	xprintf("Tensor width %d height %d num classes %d\n", width, height, num_class);
 
 	float score_threshold{modelScoreThreshold};
 	float iou_threshold{modelNMSThreshold};
@@ -305,28 +295,30 @@ static void yolov8_ob_post_processing(tflite::MicroInterpreter *static_interpret
 	_results.sort([](const box &a, const box &b)
 				  { return a.x < b.x; });
 
-
 	*num = 0;
-	int lnum=0;
-	for (auto& r : _results){
-		if (lnum >= MAX_TRACKED_YOLOV8_ALGO_RES) {break;}
-		printf("Target [%d] Box [%d,%d,%d,%d]\n",r.target,r.x,r.y,r.w,r.h);
+	int lnum = 0;
+	for (auto &r : _results)
+	{
+		if (lnum >= MAX_TRACKED_YOLOV8_ALGO_RES)
+		{
+			break;
+		}
+		printf("Target [%d] Box [%d,%d,%d,%d]\n", r.target, r.x, r.y, r.w, r.h);
 		printfloat(r.score);
 		alg->obr[lnum].bbox.x = r.x;
 		alg->obr[lnum].bbox.y = r.y;
 		alg->obr[lnum].bbox.width = r.w;
 		alg->obr[lnum].bbox.height = r.h;
 		alg->obr[lnum].class_idx = r.target;
-		alg->obr[lnum].confidence = r.score/100.;
+		alg->obr[lnum].confidence = r.score / 100.;
 		printfloat(alg->obr[lnum].confidence);
 		lnum++;
 	}
 	*num = lnum;
-	printf ("num is %d \n",*num);
-
+	printf("num is %d \n", *num);
 }
 
-int cv_yolov8n_ob_run(struct_yolov8_ob_algoResult *algoresult_yolov8n_ob,uint8_t* num)
+int cv_yolov8n_ob_run(struct_yolov8_ob_algoResult *algoresult_yolov8n_ob, uint8_t *num)
 {
 	int ercode = 0;
 	float w_scale;
@@ -405,7 +397,7 @@ int cv_yolov8n_ob_run(struct_yolov8_ob_algoResult *algoresult_yolov8n_ob,uint8_t
 		// retrieve output data
 		// bws yolov8_ob_post_processing(yolov8n_ob_int_ptr,0.25, 0.45, algoresult_yolov8n_ob,el_algo);
 		// yolov8_ob_post_processing(yolov8n_ob_int_ptr,0.25, 0.45, algoresult_yolov8n_ob);
-		yolov8_ob_post_processing(yolov8n_ob_int_ptr, .7, .5, algoresult_yolov8n_ob,num);
+		yolov8_ob_post_processing(yolov8n_ob_int_ptr, .7, .5, algoresult_yolov8n_ob, num);
 #ifdef EACH_STEP_TICK
 		SystemGetTick(&systick_2, &loop_cnt_2);
 		dbg_printf(DBG_LESS_INFO, "Tick for Invoke for YOLOV8_OB_post_processing:[%d]\r\n\n", (loop_cnt_2 - loop_cnt_1) * CPU_CLK + (systick_1 - systick_2));
