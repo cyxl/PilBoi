@@ -10,8 +10,10 @@
 #include <stdio.h>
 #define DEGS_TO_STEPS (4096. / 360.)
 #define STEPPER_DELAY 350
-#define PIVOTORIGINX 128
-#define PIVOTORIGINY 32
+//#define PIVOTORIGINX 128
+#define PIVOTORIGINX 110
+//#define PIVOTORIGINY 32
+#define PIVOTORIGINY 40
 #define CAMCENTERX 128
 #define CAMCENTERY 128
 

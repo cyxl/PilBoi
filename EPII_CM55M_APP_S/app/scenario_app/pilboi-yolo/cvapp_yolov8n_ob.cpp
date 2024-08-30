@@ -443,6 +443,5 @@ int cv_yolov8n_ob_run(struct_yolov8_ob_algoResult *algoresult_yolov8n_ob, uint8_
 
 int cv_yolov8n_ob_deinit()
 {
-
 	return 0;
 }

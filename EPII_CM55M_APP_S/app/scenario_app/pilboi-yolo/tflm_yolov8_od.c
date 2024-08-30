@@ -87,6 +87,7 @@
 #endif
 
 #define GROVE_VISION_AI_II
+#define MAX_SEARCH_CNT 80
 
 enum PILBOI_STATES
 {
@@ -147,7 +148,7 @@ void model_change(void);
 void pinmux_init();
 
 uint8_t g_consec_pos = 0;
-#define PILBOI_FOV_CONF .9
+#define PILBOI_FOV_CONF .8
 #define PILBOI_FOV_NUM 1
 #define PILBOI_CONSEC_POS 5
 
@@ -875,8 +876,9 @@ static void dp_app_cv_yolov8n_ob_eventhdl_cb(EVT_INDEX_E event)
 		g_search_cnt++;
 		g_table_step_idx = step_some_deg(g_table_step_idx, TABLE_MOTOR_ID, false, 5.);
 		sensordplib_retrigger_capture();
-		if (g_search_cnt >= 255)
+		if (g_search_cnt >= MAX_SEARCH_CNT)
 		{
+		    g_search_cnt = 0;
 			evt_Pilboi_Next_cb();
 		}
 		break;
@@ -905,12 +907,12 @@ static void dp_app_cv_yolov8n_ob_eventhdl_cb(EVT_INDEX_E event)
 		break;
 	case EVT_PILBOI_BAD_PILL:
 		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_BAD_PILL\r\n");
-		step_some_deg(g_table_step_idx, TABLE_MOTOR_ID, false, 360.);
+		step_some_deg(g_table_step_idx, TABLE_MOTOR_ID, false, 405.);
 		evt_Pilboi_Next_cb();
 		break;
 	case EVT_PILBOI_GOOD_PILL:
 		dbg_printf(DBG_LESS_INFO, "EVT_PILBOI_GOOD_PILL\r\n");
-		step_some_deg(g_table_step_idx, TABLE_MOTOR_ID, true, 360.);
+		step_some_deg(g_table_step_idx, TABLE_MOTOR_ID, true, 405.);
 		evt_Pilboi_Next_cb();
 		break;
 
